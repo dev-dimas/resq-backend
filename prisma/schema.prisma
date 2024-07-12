@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id        String    @id @unique @default(uuid())
+  email     String    @unique
+  name      String
+  password  String
+  avatar    String?
+  isSeller  Boolean   @map("is_seller")
+  token     String?
+  customer  Customer?
+  seller    Seller?
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+}
+
+model Customer {
+  accountId    String     @id @unique @map("account_id")
+  account      Account    @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  latitude     String?
+  longitude    String?
+  favorite     Favorite?
+  subscription Subscribe?
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+}
+
+model Seller {
+  accountId  String      @id @unique @map("account_id")
+  account    Account     @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  latitude   String?
+  longitude  String?
+  product    Product[]
+  subscriber Subscribe[]
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+}
+
+model Subscribe {
+  customerId   String   @id @unique @map("customer_id")
+  customer     Customer @relation(fields: [customerId], references: [accountId], onDelete: Cascade, onUpdate: Cascade)
+  subscription Seller[]
+}
+
+model Category {
+  name      String    @id @unique
+  product   Product[]
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+}
+
+model Product {
+  id           String     @id @unique @default(uuid())
+  sellerId     String     @map("seller_id")
+  seller       Seller     @relation(fields: [sellerId], references: [accountId], onDelete: Cascade, onUpdate: Cascade)
+  categoryName String     @map("category_name")
+  category     Category   @relation(fields: [categoryName], references: [name])
+  name         String
+  description  String
+  price        String
+  images       String[]
+  startTime    String     @map("start_time")
+  endTime      String     @map("end_time")
+  isDaily      Boolean    @map("is_daily")
+  isActive     Boolean    @map("is_active")
+  favorite     Favorite[]
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+}
+
+model Favorite {
+  id         String    @id @unique @default(uuid())
+  customerId String    @unique @map("customer_id")
+  customer   Customer  @relation(fields: [customerId], references: [accountId], onDelete: Cascade, onUpdate: Cascade)
+  product    Product[]
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+}
