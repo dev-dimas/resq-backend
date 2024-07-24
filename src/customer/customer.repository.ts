@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Customer, Prisma, Seller } from '@prisma/client';
+import { Customer, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/common/prisma.service';
 
 @Injectable()
@@ -12,26 +12,72 @@ export class CustomerRepository {
     });
   }
 
-  async getCustomerWithSubcription(params: {
-    id: string;
-  }): Promise<Customer & { subscription: Seller[] }> {
-    const subscriptionList = await this.prisma.customer.findFirst({
-      where: {
-        accountId: params.id,
-      },
-      include: {
-        subscription: {
+  async getCustomerWithSubcription(params: { id: string }): Promise<
+    Prisma.SellerGetPayload<{
+      select: {
+        account: {
           select: {
-            subscription: true,
+            name: true;
+            avatar: true;
+          };
+        };
+        accountId: true;
+        latitude: true;
+        longitude: true;
+        subscriber: {
+          select: {
+            _count: true;
+          };
+        };
+      };
+    }>[]
+  > {
+    const subscriptionList = await this.prisma.seller.findMany({
+      where: {
+        subscriber: {
+          some: {
+            customerId: params.id,
+          },
+        },
+      },
+      select: {
+        account: {
+          select: {
+            name: true,
+            avatar: true,
+          },
+        },
+        accountId: true,
+        latitude: true,
+        longitude: true,
+        subscriber: {
+          select: {
+            _count: true,
           },
         },
       },
     });
 
-    return {
-      ...subscriptionList,
-      subscription: subscriptionList.subscription.subscription,
-    };
+    // const subscription = subscriptionList.subscription.subscription?.map(
+    //   (account) => {
+    //     return {
+    //       sellerId: account.account.id,
+    //       name: account.account.name,
+    //       avatar: account.account.avatar,
+    //       latitude: account.account.seller.latitude,
+    //       longitude: account.account.seller.longitude,
+    //       subscriber: account.account.seller.subscriber[0]._count.subscription,
+    //       distance: this.haversine.calculateDistance(
+    //         subscriptionList.latitude,
+    //         subscriptionList.longitude,
+    //         account.account.seller.latitude,
+    //         account.account.seller.longitude,
+    //       ),
+    //     };
+    //   },
+    // );
+
+    return subscriptionList;
   }
 
   async addSubscription(params: {
@@ -89,17 +135,49 @@ export class CustomerRepository {
 
   async getCustomerWithFavorite(params: { id: string }): Promise<
     Prisma.CustomerGetPayload<{
-      include: { favorite: { select: { product: true } } };
+      select: {
+        favorite: {
+          select: {
+            product: {
+              select: {
+                id: true;
+                name: true;
+                price: true;
+                images: true;
+                seller: {
+                  select: {
+                    latitude: true;
+                    longitude: true;
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
     }>
   > {
     return await this.prisma.customer.findFirst({
       where: {
         accountId: params.id,
       },
-      include: {
+      select: {
         favorite: {
           select: {
-            product: true,
+            product: {
+              select: {
+                id: true,
+                name: true,
+                price: true,
+                images: true,
+                seller: {
+                  select: {
+                    latitude: true,
+                    longitude: true,
+                  },
+                },
+              },
+            },
           },
         },
       },

@@ -4,13 +4,15 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Account, Customer, Prisma, Seller } from '@prisma/client';
+import { Account } from '@prisma/client';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { ValidationService } from 'src/common/validation.service';
 import {
   AddFavoriteRequest,
+  FavoriteListResponse,
   RemoveFavoriteRequest,
   SubscribeRequest,
+  SubscriptionListResponse,
   UnsubscribeRequest,
 } from 'src/model/customer.model';
 import { ProductRepository } from 'src/product/product.repository';
@@ -18,6 +20,7 @@ import { SellerRepository } from 'src/seller/seller.repository';
 import { Logger } from 'winston';
 import { CustomerRepository } from './customer.repository';
 import { CustomerValidation } from './customer.validation';
+import { HaversineService } from 'src/utils/haversine/haversine.service';
 
 @Injectable()
 export class CustomerService {
@@ -26,14 +29,36 @@ export class CustomerService {
     private customerRepository: CustomerRepository,
     private sellerRepository: SellerRepository,
     private productRepository: ProductRepository,
+    private haversineService: HaversineService,
     @Inject(WINSTON_MODULE_PROVIDER) private logger: Logger,
   ) {}
 
   async subscriptionList(
     account: Account,
-  ): Promise<Customer & { subscription: Seller[] }> {
-    return await this.customerRepository.getCustomerWithSubcription({
+  ): Promise<SubscriptionListResponse[]> {
+    const subscriptionList =
+      await this.customerRepository.getCustomerWithSubcription({
+        id: account.id,
+      });
+
+    const customer = await this.customerRepository.getCustomer({
       id: account.id,
+    });
+
+    return subscriptionList.map((seller) => {
+      return {
+        accountId: seller.accountId,
+        latitude: seller.latitude,
+        longitude: seller.longitude,
+        ...seller.account,
+        distance: this.haversineService.calculateDistance(
+          customer.latitude,
+          customer.longitude,
+          seller.latitude,
+          seller.longitude,
+        ),
+        subscriber: seller.subscriber.length,
+      };
     });
   }
 
@@ -46,13 +71,14 @@ export class CustomerService {
       request,
     );
 
-    const customer = await this.customerRepository.getCustomerWithSubcription({
-      id: account.id,
-    });
+    const subscriptionList =
+      await this.customerRepository.getCustomerWithSubcription({
+        id: account.id,
+      });
 
     if (
-      customer.subscription &&
-      customer.subscription.find(
+      subscriptionList &&
+      subscriptionList.find(
         (seller) => seller.accountId === subscribeRequest.to,
       )
     ) {
@@ -78,13 +104,14 @@ export class CustomerService {
     const unsubscribedRequest: UnsubscribeRequest =
       this.validationService.validate(CustomerValidation.UNSUBSCRIBE, request);
 
-    const customer = await this.customerRepository.getCustomerWithSubcription({
-      id: account.id,
-    });
+    const subscriptionList =
+      await this.customerRepository.getCustomerWithSubcription({
+        id: account.id,
+      });
 
     if (
-      customer.subscription &&
-      !customer.subscription.find(
+      subscriptionList &&
+      !subscriptionList.find(
         (seller) => seller.accountId === unsubscribedRequest.from,
       )
     ) {
@@ -103,13 +130,28 @@ export class CustomerService {
     });
   }
 
-  async favoriteList(account: Account): Promise<
-    Prisma.CustomerGetPayload<{
-      include: { favorite: { select: { product: true } } };
-    }>
-  > {
-    return await this.customerRepository.getCustomerWithFavorite({
+  async favoriteList(account: Account): Promise<FavoriteListResponse[]> {
+    const customer = await this.customerRepository.getCustomer({
       id: account.id,
+    });
+
+    const favoriteList = await this.customerRepository.getCustomerWithFavorite({
+      id: account.id,
+    });
+
+    return favoriteList.favorite.product.map((product) => {
+      return {
+        id: product.id,
+        name: product.name,
+        images: product.images,
+        price: product.price,
+        distance: this.haversineService.calculateDistance(
+          customer.latitude,
+          customer.longitude,
+          product.seller.latitude,
+          product.seller.longitude,
+        ),
+      };
     });
   }
 

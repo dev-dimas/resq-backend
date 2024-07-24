@@ -1,12 +1,14 @@
 import { Body, Controller, Delete, Get, HttpCode, Post } from '@nestjs/common';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Account, Customer, Prisma, Seller } from '@prisma/client';
+import { Account } from '@prisma/client';
 import { AuthCustomer } from 'src/common/auth.decorator';
 import {
   AddFavoriteRequest,
+  FavoriteListResponse,
   RemoveFavoriteRequest,
   SubscribeRequest,
+  SubscriptionListResponse,
   UnsubscribeRequest,
 } from 'src/model/customer.model';
 import { WebResponse } from 'src/model/web.model';
@@ -21,7 +23,7 @@ export class CustomerController {
   @ApiBearerAuth()
   async getAllSubscription(
     @AuthCustomer() account: Account,
-  ): Promise<WebResponse<Customer & { subscription: Seller[] }>> {
+  ): Promise<WebResponse<SubscriptionListResponse[]>> {
     const subscriptionList =
       await this.customerService.subscriptionList(account);
 
@@ -61,13 +63,9 @@ export class CustomerController {
 
   @Get('favorite')
   @ApiBearerAuth()
-  async getAllFavorite(@AuthCustomer() account: Account): Promise<
-    WebResponse<
-      Prisma.CustomerGetPayload<{
-        include: { favorite: { select: { product: true } } };
-      }>
-    >
-  > {
+  async getAllFavorite(
+    @AuthCustomer() account: Account,
+  ): Promise<WebResponse<FavoriteListResponse[]>> {
     return {
       message: 'Successfully get favorite list',
       data: await this.customerService.favoriteList(account),
