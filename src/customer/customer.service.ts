@@ -9,6 +9,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { ValidationService } from 'src/common/validation.service';
 import {
   AddFavoriteRequest,
+  CustomerDashboardResponse,
   FavoriteListResponse,
   RemoveFavoriteRequest,
   SubscribeRequest,
@@ -21,6 +22,7 @@ import { Logger } from 'winston';
 import { CustomerRepository } from './customer.repository';
 import { CustomerValidation } from './customer.validation';
 import { HaversineService } from 'src/utils/haversine/haversine.service';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class CustomerService {
@@ -32,6 +34,52 @@ export class CustomerService {
     private haversineService: HaversineService,
     @Inject(WINSTON_MODULE_PROVIDER) private logger: Logger,
   ) {}
+
+  async getCustomerDashboard(
+    account: Account,
+  ): Promise<CustomerDashboardResponse> {
+    const customer =
+      await this.customerRepository.getCustomerDashboard(account);
+
+    const latitude = parseFloat(customer.latitude);
+    const longitude = parseFloat(customer.longitude);
+
+    const productsInRadius =
+      await this.productRepository.getAllProductWithinRadius(
+        latitude,
+        longitude,
+        25,
+      );
+
+    const availableProducts = productsInRadius.filter((product) => {
+      let isAvailable = false;
+
+      const startDate = dayjs(product.startTime);
+      const endDate = dayjs(product.endTime);
+
+      const startTimeSell = dayjs(
+        product.isDaily ? undefined : product.startTime,
+      )
+        .hour(startDate.hour())
+        .minute(startDate.minute());
+      const endTimeSell = dayjs(product.isDaily ? undefined : product.startTime)
+        .hour(endDate.hour())
+        .minute(endDate.minute());
+      const now = dayjs();
+
+      if (now.isAfter(startTimeSell) && now.isBefore(endTimeSell))
+        isAvailable = true;
+
+      return isAvailable;
+    });
+
+    return {
+      ...customer.account,
+      latitude: customer.latitude,
+      longitude: customer.longitude,
+      products: availableProducts,
+    };
+  }
 
   async subscriptionList(
     account: Account,

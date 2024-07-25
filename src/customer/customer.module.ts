@@ -15,6 +15,6 @@ import { HaversineService } from 'src/utils/haversine/haversine.service';
     SellerRepository,
     ProductRepository,
   ],
-  exports: [CustomerRepository],
+  exports: [CustomerRepository, CustomerService],
 })
 export class CustomerModule {}

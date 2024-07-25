@@ -23,6 +23,11 @@ export class AccountValidation {
     newPassword: z.string().min(8),
   });
 
+  static readonly UPDATE_LOCATION: ZodType = z.object({
+    latitude: z.number(),
+    longitude: z.number(),
+  });
+
   static readonly LOGOUT: ZodType = z.object({
     token: z.string().min(1),
   });

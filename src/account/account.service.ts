@@ -18,6 +18,8 @@ import {
   LoginAccountResponse,
   RegisterAccountRequest,
   RegisterAccountResponse,
+  UpdateLocationRequest,
+  UpdateLocationResponse,
 } from 'src/model/account.model';
 import { v4 as uuid } from 'uuid';
 import { Logger } from 'winston';
@@ -89,6 +91,7 @@ export class AccountService {
 
     return {
       token: loginToken,
+      isSeller: account.isSeller,
     };
   }
 
@@ -163,6 +166,23 @@ export class AccountService {
     await this.accountRepository.updateAccountPassword({
       id: account.id,
       password: changePasswordRequest.newPassword,
+    });
+  }
+
+  async updateLocation(
+    request: UpdateLocationRequest,
+    account: Account,
+  ): Promise<UpdateLocationResponse> {
+    const updateLocationRequest: UpdateLocationRequest =
+      this.validationService.validate(
+        AccountValidation.UPDATE_LOCATION,
+        request,
+      );
+
+    return await this.accountRepository.updateAccountLocation({
+      account: account,
+      latitude: `${updateLocationRequest.latitude}`,
+      longitude: `${updateLocationRequest.longitude}`,
     });
   }
 

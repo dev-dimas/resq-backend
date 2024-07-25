@@ -1,3 +1,14 @@
+import { Product } from '@prisma/client';
+
+export class CustomerDashboardResponse {
+  name: string;
+  email: string;
+  avatar: string;
+  latitude: string;
+  longitude: string;
+  products: Product[];
+}
+
 export class SubscriptionListResponse {
   accountId: string;
   latitude: string | null;

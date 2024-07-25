@@ -20,6 +20,7 @@ export class LoginAccountRequest {
 
 export class LoginAccountResponse {
   token: string;
+  isSeller: boolean;
 }
 
 export class EditProfileRequest {
@@ -40,4 +41,14 @@ export class EditAvatarRequest {
 export class ChangePasswordRequest {
   currentPassword: string;
   newPassword: string;
+}
+
+export class UpdateLocationRequest {
+  latitude: number;
+  longitude: number;
+}
+
+export class UpdateLocationResponse {
+  latitude: string;
+  longitude: string;
 }

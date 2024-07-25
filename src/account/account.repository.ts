@@ -105,6 +105,43 @@ export class AccountRepository {
       },
     });
   }
+
+  async updateAccountLocation(params: {
+    account: Account;
+    latitude: string;
+    longitude: string;
+  }) {
+    if (params.account.isSeller) {
+      return await this.prisma.seller.update({
+        where: {
+          accountId: params.account.id,
+        },
+        data: {
+          latitude: params.latitude,
+          longitude: params.longitude,
+        },
+        select: {
+          latitude: true,
+          longitude: true,
+        },
+      });
+    }
+
+    return await this.prisma.customer.update({
+      where: {
+        accountId: params.account.id,
+      },
+      data: {
+        latitude: `${params.latitude}`,
+        longitude: `${params.longitude}`,
+      },
+      select: {
+        latitude: true,
+        longitude: true,
+      },
+    });
+  }
+
   async setToken(params: { email: string; token: string }): Promise<void> {
     await this.prisma.account.update({
       where: {

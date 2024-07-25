@@ -14,13 +14,13 @@ export class ProductValidation {
     images: z.any(),
     startTime: z
       .string()
-      .refine((val) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(val), {
-        message: 'Invalid time format. Expected HH:mm.',
+      .datetime({
+        message: 'Invalid date format. Expected date with ISO 8601 format.',
       }),
     endTime: z
       .string()
-      .refine((val) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(val), {
-        message: 'Invalid time format. Expected HH:mm.',
+      .datetime({
+        message: 'Invalid date format. Expected date with ISO 8601 format.',
       }),
     isDaily: z.string().refine((val) => val === 'true' || val === 'false', {
       message: 'Invalid value. Expected true or false.',
@@ -41,14 +41,14 @@ export class ProductValidation {
     images: z.any().optional(),
     startTime: z
       .string()
-      .refine((val) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(val), {
-        message: "Invalid time format. Expected 'HH:mm'.",
+      .datetime({
+        message: 'Invalid date format. Expected date with ISO 8601 format.',
       })
       .optional(),
     endTime: z
       .string()
-      .refine((val) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(val), {
-        message: "Invalid time format. Expected 'HH:mm'.",
+      .datetime({
+        message: 'Invalid date format. Expected date with ISO 8601 format.',
       })
       .optional(),
     isDaily: z

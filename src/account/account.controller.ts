@@ -3,7 +3,9 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
+  NotFoundException,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -12,6 +14,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Account } from '@prisma/client';
 import { AuthUser } from 'src/common/auth.decorator';
+import { CustomerService } from 'src/customer/customer.service';
 import {
   ChangePasswordRequest,
   EditAvatarRequest,
@@ -21,14 +24,39 @@ import {
   LoginAccountResponse,
   RegisterAccountRequest,
   RegisterAccountResponse,
+  UpdateLocationRequest,
+  UpdateLocationResponse,
 } from 'src/model/account.model';
+import { CustomerDashboardResponse } from 'src/model/customer.model';
+import { SellerDashboardResponse } from 'src/model/seller.model';
 import { WebResponse } from 'src/model/web.model';
+import { SellerService } from 'src/seller/seller.service';
 import { AccountService } from './account.service';
 
 @Controller('account')
 @ApiTags('Account')
 export class AccountController {
-  constructor(private accountService: AccountService) {}
+  constructor(
+    private accountService: AccountService,
+    private customerService: CustomerService,
+    private sellerService: SellerService,
+  ) {}
+
+  @Get()
+  @ApiBearerAuth()
+  async getDashboard(
+    @AuthUser() account: Account,
+  ): Promise<WebResponse<CustomerDashboardResponse | SellerDashboardResponse>> {
+    const isSeller = account.isSeller;
+
+    const dashboard = isSeller
+      ? await this.sellerService.getSellerDashboard(account)
+      : await this.customerService.getCustomerDashboard(account);
+
+    if (!dashboard) throw new NotFoundException('Account not found');
+
+    return { message: 'Success', data: dashboard };
+  }
 
   @Post('register')
   async register(
@@ -67,7 +95,7 @@ export class AccountController {
   @HttpCode(200)
   @UseInterceptors(
     FileInterceptor('avatar', {
-      limits: { fileSize: 4000000, files: 1 },
+      limits: { files: 1 },
     }),
   )
   @ApiConsumes('multipart/form-data')
@@ -106,6 +134,19 @@ export class AccountController {
     await this.accountService.changePassword(request, account);
 
     return { message: 'Password updated successfully!' };
+  }
+
+  @Post('location')
+  @HttpCode(200)
+  @ApiBearerAuth()
+  async location(
+    @AuthUser() account: Account,
+    @Body() request: UpdateLocationRequest,
+  ): Promise<WebResponse<UpdateLocationResponse>> {
+    return {
+      message: 'Location updated successfully!',
+      data: await this.accountService.updateLocation(request, account),
+    };
   }
 
   @Post('logout')

@@ -19,17 +19,25 @@ import { CustomerService } from './customer.service';
 export class CustomerController {
   constructor(private customerService: CustomerService) {}
 
+  @Get()
+  @ApiBearerAuth()
+  async getCustomerDashboard(
+    @AuthCustomer() account: Account,
+  ): Promise<WebResponse<any>> {
+    return {
+      message: 'Successfully get customer dashboard',
+      data: await this.customerService.getCustomerDashboard(account),
+    };
+  }
+
   @Get('subscription')
   @ApiBearerAuth()
   async getAllSubscription(
     @AuthCustomer() account: Account,
   ): Promise<WebResponse<SubscriptionListResponse[]>> {
-    const subscriptionList =
-      await this.customerService.subscriptionList(account);
-
     return {
       message: 'Successfully get subscription list',
-      data: subscriptionList,
+      data: await this.customerService.subscriptionList(account),
     };
   }
 

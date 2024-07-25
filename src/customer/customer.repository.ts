@@ -6,6 +6,37 @@ import { PrismaService } from 'src/common/prisma.service';
 export class CustomerRepository {
   constructor(private prisma: PrismaService) {}
 
+  async getCustomerDashboard(params: { id: string }): Promise<
+    Prisma.CustomerGetPayload<{
+      select: {
+        account: {
+          select: {
+            name: true;
+            email: true;
+            avatar: true;
+          };
+        };
+        latitude: true;
+        longitude: true;
+      };
+    }>
+  > {
+    return await this.prisma.customer.findFirst({
+      where: { accountId: params.id },
+      select: {
+        account: {
+          select: {
+            name: true,
+            email: true,
+            avatar: true,
+          },
+        },
+        latitude: true,
+        longitude: true,
+      },
+    });
+  }
+
   async getCustomer(params: { id: string }): Promise<Customer> {
     return await this.prisma.customer.findFirst({
       where: { accountId: params.id },
@@ -57,26 +88,6 @@ export class CustomerRepository {
         },
       },
     });
-
-    // const subscription = subscriptionList.subscription.subscription?.map(
-    //   (account) => {
-    //     return {
-    //       sellerId: account.account.id,
-    //       name: account.account.name,
-    //       avatar: account.account.avatar,
-    //       latitude: account.account.seller.latitude,
-    //       longitude: account.account.seller.longitude,
-    //       subscriber: account.account.seller.subscriber[0]._count.subscription,
-    //       distance: this.haversine.calculateDistance(
-    //         subscriptionList.latitude,
-    //         subscriptionList.longitude,
-    //         account.account.seller.latitude,
-    //         account.account.seller.longitude,
-    //       ),
-    //     };
-    //   },
-    // );
-
     return subscriptionList;
   }
 

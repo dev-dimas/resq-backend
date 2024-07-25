@@ -40,6 +40,30 @@ export class ProductRepository {
     });
   }
 
+  async getAllProductWithinRadius(
+    latitude: number,
+    longitude: number,
+    radius: number,
+  ): Promise<Product[]> {
+    const products = await this.prisma.$queryRaw`
+    SELECT
+      p.*
+    FROM
+      "Product" p
+    JOIN
+      "Seller" s ON p."seller_id" = s."account_id"
+    WHERE
+      6371 * acos(
+        cos(radians(${latitude})) * cos(radians(CAST(s."latitude" AS float))) *
+        cos(radians(CAST(s."longitude" AS float)) - radians(${longitude})) +
+        sin(radians(${latitude})) * sin(radians(CAST(s."latitude" AS float)))
+      ) <= ${radius}
+      AND p."is_active" = true
+  `;
+
+    return products as Product[];
+  }
+
   async getById(params: { id: string }): Promise<Product> {
     return await this.prisma.product.findFirst({
       where: {

@@ -66,8 +66,8 @@ model Product {
   description  String
   price        String
   images       String[]
-  startTime    String     @map("start_time")
-  endTime      String     @map("end_time")
+  startTime    DateTime   @map("start_time")
+  endTime      DateTime   @map("end_time")
   isDaily      Boolean    @map("is_daily")
   isActive     Boolean    @map("is_active")
   favorite     Favorite[]
