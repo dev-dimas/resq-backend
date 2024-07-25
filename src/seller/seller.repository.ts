@@ -27,8 +27,14 @@ export class SellerRepository {
           select: {
             id: true;
             name: true;
+            description: true;
+            categoryName: true;
             price: true;
             images: true;
+            startTime: true;
+            endTime: true;
+            isDaily: true;
+            isActive: true;
           };
         };
       };
@@ -57,8 +63,14 @@ export class SellerRepository {
           select: {
             id: true,
             name: true,
+            description: true,
+            categoryName: true,
             price: true,
             images: true,
+            startTime: true,
+            endTime: true,
+            isDaily: true,
+            isActive: true,
           },
         },
       },

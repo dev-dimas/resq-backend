@@ -58,7 +58,7 @@ export class ProductController {
   @Post()
   @UseInterceptors(
     FileInterceptor('images', {
-      limits: { fileSize: 4000000, files: 1 },
+      limits: { files: 1 },
     }),
   )
   @ApiConsumes('multipart/form-data')
@@ -85,7 +85,7 @@ export class ProductController {
   @Patch(':productId')
   @UseInterceptors(
     FileInterceptor('images', {
-      limits: { fileSize: 4000000, files: 1 },
+      limits: { files: 1 },
     }),
   )
   @ApiConsumes('multipart/form-data')

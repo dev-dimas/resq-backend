@@ -7,12 +7,20 @@ export class SellerDashboardResponse {
   latitude: string;
   longitude: string;
   subscriber: number;
-  product: {
-    name: string;
-    id: string;
-    price: string;
-    images: string[];
-  }[];
+  products: Prisma.ProductGetPayload<{
+    select: {
+      id: true;
+      name: true;
+      description: true;
+      categoryName: true;
+      price: true;
+      images: true;
+      startTime: true;
+      endTime: true;
+      isDaily: true;
+      isActive: true;
+    };
+  }>[];
 }
 
 export class GetSellerDataResponse {

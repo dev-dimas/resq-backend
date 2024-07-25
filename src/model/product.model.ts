@@ -11,15 +11,6 @@ export class SearchProductResponse {
 }
 
 export class FindProductByIdResponse {
-  // customer: Prisma.CustomerGetPayload<{
-  //   include: {
-  //     favorite: {
-  //       include: {
-  //         product: true;
-  //       };
-  //     };
-  //   };
-  // }>;
   customer: Customer;
   product: Prisma.ProductGetPayload<{
     include: {

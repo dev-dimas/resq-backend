@@ -20,7 +20,7 @@ export class SellerService {
       latitude: seller.latitude,
       longitude: seller.longitude,
       subscriber: seller.subscriber.length,
-      product: seller.product,
+      products: seller.product,
     };
   }
 

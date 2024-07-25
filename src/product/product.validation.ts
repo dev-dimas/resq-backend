@@ -7,21 +7,17 @@ export class ProductValidation {
     price: z.string(),
     categoryName: z
       .string()
-      .refine((val) => /^(Makanan|Minuman|Salad|Desert)$/.test(val), {
+      .refine((val) => /^(Makanan|Minuman|Salad|Dessert)$/.test(val), {
         message:
-          "Invalid category name. Expected 'Makanan', 'Minuman', 'Salad', or 'Desert'.",
+          "Invalid category name. Expected 'Makanan', 'Minuman', 'Salad', or 'Dessert'.",
       }),
     images: z.any(),
-    startTime: z
-      .string()
-      .datetime({
-        message: 'Invalid date format. Expected date with ISO 8601 format.',
-      }),
-    endTime: z
-      .string()
-      .datetime({
-        message: 'Invalid date format. Expected date with ISO 8601 format.',
-      }),
+    startTime: z.string().datetime({
+      message: 'Invalid date format. Expected date with ISO 8601 format.',
+    }),
+    endTime: z.string().datetime({
+      message: 'Invalid date format. Expected date with ISO 8601 format.',
+    }),
     isDaily: z.string().refine((val) => val === 'true' || val === 'false', {
       message: 'Invalid value. Expected true or false.',
     }),
@@ -33,9 +29,9 @@ export class ProductValidation {
     price: z.string().optional(),
     categoryName: z
       .string()
-      .refine((val) => /^(Makanan|Minuman|Salad|Desert)$/.test(val), {
+      .refine((val) => /^(Makanan|Minuman|Salad|Dessert)$/.test(val), {
         message:
-          "Invalid category name. Expected 'Makanan', 'Minuman', 'Salad', or 'Desert'.",
+          "Invalid category name. Expected 'Makanan', 'Minuman', 'Salad', or 'Dessert'.",
       })
       .optional(),
     images: z.any().optional(),
