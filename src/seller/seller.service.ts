@@ -5,6 +5,7 @@ import {
   SellerDashboardResponse,
 } from 'src/model/seller.model';
 import { SellerRepository } from './seller.repository';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class SellerService {
@@ -31,6 +32,49 @@ export class SellerService {
 
     if (!seller) throw new NotFoundException('Seller not found!');
 
-    return { seller };
+    const now = dayjs();
+
+    return {
+      accountId: seller.accountId,
+      name: seller.account.name,
+      avatar: seller.account.avatar,
+      latitude: seller.latitude,
+      longitude: seller.longitude,
+      subscriber: seller.subscriber.length,
+      products: seller.product
+        .filter((product) => {
+          if (!product.isActive) return false;
+          if (product.isDaily) return true;
+          let isAvailable = false;
+
+          const startDate = dayjs(product.startTime);
+          const endDate = dayjs(product.endTime);
+
+          if (now.isAfter(startDate) && now.isBefore(endDate))
+            isAvailable = true;
+
+          return isAvailable;
+        })
+        .map((product) => {
+          const startDate = dayjs(product.startTime);
+          const endDate = dayjs(product.endTime);
+
+          let startTimeSell = dayjs(product.isDaily ? now : product.startTime)
+            .hour(startDate.hour())
+            .minute(startDate.minute());
+          let endTimeSell = dayjs(product.isDaily ? now : product.endTime)
+            .hour(endDate.hour())
+            .minute(endDate.minute());
+
+          if (product.isDaily && startTimeSell.isAfter(endTimeSell)) {
+            endTimeSell = endTimeSell.add(1, 'day');
+          }
+
+          return {
+            ...product,
+            isOnSale: now.isAfter(startTimeSell) && now.isBefore(endTimeSell),
+          };
+        }),
+    };
   }
 }

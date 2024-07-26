@@ -140,4 +140,17 @@ export class ProductController {
     const result = await this.productService.findById(productId, account);
     return { message: 'Success', data: result };
   }
+
+  /**
+   * Reactivate Product
+   */
+  @Post(':productId/reactivate')
+  @ApiBearerAuth()
+  async reActivate(
+    @AuthSeller() account: Account,
+    @Param('productId') productId: string,
+  ): Promise<WebResponse> {
+    await this.productService.reActivate(account, productId);
+    return { message: 'Product reactivated!' };
+  }
 }

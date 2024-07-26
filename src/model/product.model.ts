@@ -14,9 +14,21 @@ export class FindProductByIdResponse {
   customer: Customer;
   product: Prisma.ProductGetPayload<{
     include: {
-      seller: true;
+      seller: {
+        select: {
+          account: {
+            select: {
+              id: true;
+              name: true;
+              avatar: true;
+            };
+          };
+          latitude: true;
+          longitude: true;
+        };
+      };
     };
-  }> & { distance: number };
+  }> & { distance: number; seller: { subscriber: number } };
 }
 
 export class CreateProductRequest {
@@ -28,7 +40,6 @@ export class CreateProductRequest {
   images: any;
   startTime: string;
   endTime: string;
-  // isActive: boolean;
   isDaily: string;
 }
 

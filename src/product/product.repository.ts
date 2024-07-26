@@ -44,10 +44,22 @@ export class ProductRepository {
     latitude: number,
     longitude: number,
     radius: number,
-  ): Promise<Product[]> {
+  ): Promise<(Product & { latitude: string; longitude: string })[]> {
     const products = await this.prisma.$queryRaw`
     SELECT
-      p.*
+      p."id",
+      p."seller_id" AS "sellerId",
+      p."category_name" AS "categoryName",
+      p."name",
+      p."description",
+      p."price",
+      p."images",
+      s."latitude",
+      s."longitude",
+      p."start_time" AS "startTime",
+      p."end_time" AS "endTime",
+      p."is_daily" AS "isDaily",
+      p."is_active" AS "isActive"
     FROM
       "Product" p
     JOIN
@@ -61,7 +73,7 @@ export class ProductRepository {
       AND p."is_active" = true
   `;
 
-    return products as Product[];
+    return products as (Product & { latitude: string; longitude: string })[];
   }
 
   async getById(params: { id: string }): Promise<Product> {
@@ -72,15 +84,52 @@ export class ProductRepository {
     });
   }
 
-  async getByIdWithSeller(params: {
-    id: string;
-  }): Promise<Prisma.ProductGetPayload<{ include: { seller: true } }>> {
+  async getByIdWithSeller(params: { id: string }): Promise<
+    Prisma.ProductGetPayload<{
+      include: {
+        seller: {
+          select: {
+            account: {
+              select: {
+                id: true;
+                name: true;
+                avatar: true;
+              };
+            };
+            latitude: true;
+            longitude: true;
+            subscriber: {
+              select: {
+                _count: true;
+              };
+            };
+          };
+        };
+      };
+    }>
+  > {
     return await this.prisma.product.findFirst({
       where: {
         id: params.id,
       },
       include: {
-        seller: true,
+        seller: {
+          select: {
+            account: {
+              select: {
+                name: true,
+                avatar: true,
+              },
+            },
+            latitude: true,
+            longitude: true,
+            subscriber: {
+              select: {
+                _count: true,
+              },
+            },
+          },
+        },
       },
     });
   }
@@ -149,6 +198,25 @@ export class ProductRepository {
       where: {
         id: params.id,
         sellerId: params.sellerId,
+      },
+    });
+  }
+
+  async changeTimeSell(params: {
+    id: string;
+    sellerId: string;
+    startTime: Date;
+    endTime: Date;
+  }) {
+    await this.prisma.product.update({
+      where: {
+        id: params.id,
+        sellerId: params.sellerId,
+      },
+      data: {
+        isActive: true,
+        startTime: params.startTime,
+        endTime: params.endTime,
       },
     });
   }

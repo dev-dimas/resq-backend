@@ -48,6 +48,13 @@ export class ProductService {
       id: account.id,
     });
 
+    if (!allProducts) {
+      return {
+        customer,
+        products: [],
+      };
+    }
+
     return {
       customer,
       products: allProducts
@@ -97,6 +104,27 @@ export class ProductService {
     const product = await this.prismaService.$transaction(async (prisma) => {
       const filename = await this.imageService.saveTo('product', images);
 
+      const now = dayjs();
+      const startTimeRequest = dayjs(createProductRequest.startTime);
+      const endTimeRequest = dayjs(createProductRequest.endTime);
+
+      let startTime = now
+        .hour(startTimeRequest.hour())
+        .minute(startTimeRequest.minute())
+        .second(0);
+
+      let endTime = now
+        .hour(endTimeRequest.hour())
+        .minute(endTimeRequest.minute())
+        .second(0);
+
+      if (startTime.isAfter(endTime)) {
+        endTime = endTime.add(1, 'day');
+      }
+
+      createProductRequest.startTime = startTime.format();
+      createProductRequest.endTime = endTime.format();
+
       return await this.productRepository.createProduct({
         prisma,
         productData: createProductRequest,
@@ -140,6 +168,29 @@ export class ProductService {
         await this.imageService.removeFile(existingProduct.images[0]);
       }
 
+      const now = dayjs(
+        updateProductRequest.isDaily ? undefined : existingProduct.startTime,
+      );
+      const startTimeRequest = dayjs(updateProductRequest.startTime);
+      const endTimeRequest = dayjs(updateProductRequest.endTime);
+
+      let startTime = now
+        .hour(startTimeRequest.hour())
+        .minute(startTimeRequest.minute())
+        .second(0);
+
+      let endTime = now
+        .hour(endTimeRequest.hour())
+        .minute(endTimeRequest.minute())
+        .second(0);
+
+      if (startTime.isAfter(endTime)) {
+        endTime = endTime.add(1, 'day');
+      }
+
+      updateProductRequest.startTime = startTime.format();
+      updateProductRequest.endTime = endTime.format();
+
       return await this.productRepository.updateProduct({
         prisma,
         productData: updateProductRequest,
@@ -163,6 +214,8 @@ export class ProductService {
       id: productId,
       sellerId: account.id,
     });
+
+    await this.imageService.removeFile(product.images[0]);
   }
 
   async findNearby(account: Account): Promise<SearchProductResponse> {
@@ -171,6 +224,13 @@ export class ProductService {
     const customer = await this.customerRepository.getCustomer({
       id: account.id,
     });
+
+    if (!allProducts) {
+      return {
+        customer,
+        products: [],
+      };
+    }
 
     return {
       customer,
@@ -214,9 +274,11 @@ export class ProductService {
     productId: string,
     account: Account,
   ): Promise<FindProductByIdResponse> {
-    const product = await this.productRepository.getByIdWithSeller({
+    let product = await this.productRepository.getByIdWithSeller({
       id: productId,
     });
+
+    if (!product) throw new NotFoundException('Product not found!');
 
     const customer = await this.customerRepository.getCustomer({
       id: account.id,
@@ -231,7 +293,49 @@ export class ProductService {
 
     return {
       customer,
-      product: { ...product, distance },
+      product: {
+        ...product,
+        seller: {
+          ...product.seller,
+          subscriber: product.seller.subscriber.length,
+        },
+        distance,
+      },
     };
+  }
+
+  async reActivate(account: Account, productId: string): Promise<any> {
+    const existingProduct = await this.productRepository.getById({
+      id: productId,
+    });
+
+    if (!existingProduct) throw new NotFoundException('Product not found!');
+
+    if (existingProduct.sellerId !== account.id)
+      throw new ForbiddenException('This product is not yours!');
+
+    const existingStartTime = dayjs(existingProduct.startTime);
+    const existingEndTime = dayjs(existingProduct.endTime);
+    const now = dayjs();
+
+    if (now.isAfter(existingEndTime)) return;
+
+    const newStartTime = now
+      .hour(existingStartTime.hour())
+      .minute(existingStartTime.minute())
+      .second(0)
+      .toDate();
+    const newEndTime = now
+      .hour(existingEndTime.hour())
+      .minute(existingEndTime.minute())
+      .second(0)
+      .toDate();
+
+    await this.productRepository.changeTimeSell({
+      id: productId,
+      sellerId: account.id,
+      startTime: newStartTime,
+      endTime: newEndTime,
+    });
   }
 }

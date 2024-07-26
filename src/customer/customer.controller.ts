@@ -100,4 +100,13 @@ export class CustomerController {
     await this.customerService.removeFavorite(account, request);
     return { message: 'Successfully removed from favorite' };
   }
+
+  @Delete('favorite/all')
+  @ApiBearerAuth()
+  async removeAllFavorite(
+    @AuthCustomer() account: Account,
+  ): Promise<WebResponse> {
+    await this.customerService.removeAllFavorite(account);
+    return { message: 'Successfully removed all from favorite' };
+  }
 }

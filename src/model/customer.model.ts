@@ -6,7 +6,11 @@ export class CustomerDashboardResponse {
   avatar: string;
   latitude: string;
   longitude: string;
-  products: Product[];
+  products: (Product & {
+    latitude: string;
+    longitude: string;
+    distance: number;
+  })[];
 }
 
 export class SubscriptionListResponse {
@@ -15,7 +19,6 @@ export class SubscriptionListResponse {
   longitude: string | null;
   name: string;
   avatar: string | null;
-  distance: number;
   subscriber: number;
 }
 

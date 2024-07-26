@@ -168,7 +168,7 @@ export class CustomerRepository {
       };
     }>
   > {
-    return await this.prisma.customer.findFirst({
+    const favoriteList = await this.prisma.customer.findFirst({
       where: {
         accountId: params.id,
       },
@@ -193,6 +193,9 @@ export class CustomerRepository {
         },
       },
     });
+    if (!favoriteList) return { favorite: { product: [] } };
+
+    return favoriteList;
   }
 
   async addFavorite(params: { id: string; productId: string }): Promise<void> {
@@ -238,6 +241,23 @@ export class CustomerRepository {
               disconnect: {
                 id: params.productId,
               },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async removeAllFavorite(params: { id: string }): Promise<void> {
+    await this.prisma.customer.update({
+      where: {
+        accountId: params.id,
+      },
+      data: {
+        favorite: {
+          update: {
+            product: {
+              set: [],
             },
           },
         },

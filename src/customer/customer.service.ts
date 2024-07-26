@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Account } from '@prisma/client';
+import dayjs from 'dayjs';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { ValidationService } from 'src/common/validation.service';
 import {
@@ -18,11 +19,10 @@ import {
 } from 'src/model/customer.model';
 import { ProductRepository } from 'src/product/product.repository';
 import { SellerRepository } from 'src/seller/seller.repository';
+import { HaversineService } from 'src/utils/haversine/haversine.service';
 import { Logger } from 'winston';
 import { CustomerRepository } from './customer.repository';
 import { CustomerValidation } from './customer.validation';
-import { HaversineService } from 'src/utils/haversine/haversine.service';
-import dayjs from 'dayjs';
 
 @Injectable()
 export class CustomerService {
@@ -51,27 +51,44 @@ export class CustomerService {
         25,
       );
 
-    const availableProducts = productsInRadius.filter((product) => {
-      let isAvailable = false;
+    const now = dayjs();
 
-      const startDate = dayjs(product.startTime);
-      const endDate = dayjs(product.endTime);
+    const availableProducts = productsInRadius
+      .filter((product) => {
+        let isAvailable = false;
 
-      const startTimeSell = dayjs(
-        product.isDaily ? undefined : product.startTime,
-      )
-        .hour(startDate.hour())
-        .minute(startDate.minute());
-      const endTimeSell = dayjs(product.isDaily ? undefined : product.startTime)
-        .hour(endDate.hour())
-        .minute(endDate.minute());
-      const now = dayjs();
+        const startDate = dayjs(product.startTime);
+        const endDate = dayjs(product.endTime);
 
-      if (now.isAfter(startTimeSell) && now.isBefore(endTimeSell))
-        isAvailable = true;
+        let startTimeSell = dayjs(product.isDaily ? now : product.startTime)
+          .hour(startDate.hour())
+          .minute(startDate.minute());
+        let endTimeSell = dayjs(product.isDaily ? now : product.endTime)
+          .hour(endDate.hour())
+          .minute(endDate.minute());
 
-      return isAvailable;
-    });
+        if (product.isDaily && startTimeSell.isAfter(endTimeSell)) {
+          endTimeSell = endTimeSell.add(1, 'day');
+        }
+
+        if (now.isAfter(startTimeSell) && now.isBefore(endTimeSell))
+          isAvailable = true;
+
+        return isAvailable;
+      })
+      .map((product) => {
+        const distance = this.haversineService.calculateDistance(
+          latitude,
+          longitude,
+          product.latitude,
+          product.longitude,
+        );
+
+        return {
+          ...product,
+          distance,
+        };
+      });
 
     return {
       ...customer.account,
@@ -89,22 +106,12 @@ export class CustomerService {
         id: account.id,
       });
 
-    const customer = await this.customerRepository.getCustomer({
-      id: account.id,
-    });
-
     return subscriptionList.map((seller) => {
       return {
         accountId: seller.accountId,
         latitude: seller.latitude,
         longitude: seller.longitude,
         ...seller.account,
-        distance: this.haversineService.calculateDistance(
-          customer.latitude,
-          customer.longitude,
-          seller.latitude,
-          seller.longitude,
-        ),
         subscriber: seller.subscriber.length,
       };
     });
@@ -187,6 +194,8 @@ export class CustomerService {
       id: account.id,
     });
 
+    if (!favoriteList.favorite) return [];
+
     return favoriteList.favorite.product.map((product) => {
       return {
         id: product.id,
@@ -267,5 +276,9 @@ export class CustomerService {
       id: account.id,
       productId: removeFavoriteRequest.productId,
     });
+  }
+
+  async removeAllFavorite(account: Account): Promise<void> {
+    await this.customerRepository.removeAllFavorite({ id: account.id });
   }
 }

@@ -85,18 +85,69 @@ export class SellerRepository {
     });
   }
 
-  async getByIdWithProductAndSubscriber(params: {
-    id: string;
-  }): Promise<
-    Prisma.SellerGetPayload<{ include: { product: true; subscriber: true } }>
+  async getByIdWithProductAndSubscriber(params: { id: string }): Promise<
+    Prisma.SellerGetPayload<{
+      select: {
+        accountId: true;
+        account: {
+          select: {
+            name: true;
+            avatar: true;
+          };
+        };
+        latitude: true;
+        longitude: true;
+        subscriber: {
+          select: {
+            _count: true;
+          };
+        };
+        product: {
+          select: {
+            id: true;
+            name: true;
+            price: true;
+            images: true;
+            isActive: true;
+            isDaily: true;
+            startTime: true;
+            endTime: true;
+          };
+        };
+      };
+    }>
   > {
     return await this.prisma.seller.findFirst({
       where: {
         accountId: params.id,
       },
-      include: {
-        product: true,
-        subscriber: true,
+      select: {
+        accountId: true,
+        account: {
+          select: {
+            name: true,
+            avatar: true,
+          },
+        },
+        latitude: true,
+        longitude: true,
+        subscriber: {
+          select: {
+            _count: true,
+          },
+        },
+        product: {
+          select: {
+            id: true,
+            name: true,
+            price: true,
+            images: true,
+            isActive: true,
+            isDaily: true,
+            startTime: true,
+            endTime: true,
+          },
+        },
       },
     });
   }
