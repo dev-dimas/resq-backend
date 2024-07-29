@@ -23,6 +23,8 @@ import { ProductValidation } from './product.validation';
 import { ProductRepository } from './product.repository';
 import { CustomerRepository } from 'src/customer/customer.repository';
 import { PrismaService } from 'src/common/prisma.service';
+import { NotificationService } from 'src/common/notification.service';
+import { SellerRepository } from 'src/seller/seller.repository';
 
 @Injectable()
 export class ProductService {
@@ -31,8 +33,10 @@ export class ProductService {
     private haversineService: HaversineService,
     private prismaService: PrismaService,
     private productRepository: ProductRepository,
+    private sellerRepository: SellerRepository,
     private customerRepository: CustomerRepository,
     private imageService: ImageService,
+    private notificationService: NotificationService,
     @Inject(WINSTON_MODULE_PROVIDER) private logger: Logger,
   ) {}
 
@@ -108,7 +112,7 @@ export class ProductService {
       const startTimeRequest = dayjs(createProductRequest.startTime);
       const endTimeRequest = dayjs(createProductRequest.endTime);
 
-      let startTime = now
+      const startTime = now
         .hour(startTimeRequest.hour())
         .minute(startTimeRequest.minute())
         .second(0);
@@ -125,12 +129,32 @@ export class ProductService {
       createProductRequest.startTime = startTime.format();
       createProductRequest.endTime = endTime.format();
 
-      return await this.productRepository.createProduct({
+      const product = await this.productRepository.createProduct({
         prisma,
         productData: createProductRequest,
         imagePath: filename,
         account,
       });
+
+      if (now.isAfter(startTime) && now.isBefore(endTime)) {
+        const result = await this.sellerRepository.getSubscribers({
+          id: account.id,
+        });
+
+        if (!result) return;
+
+        const subscribers = result.flatMap((item) =>
+          item.subscriber.map((sub) => sub.customerId),
+        );
+
+        await this.notificationService.sendNotification(subscribers, {
+          title: account.name,
+          body: `Produk baru!. Cobain ${product.name} yuk di toko kami 😍.`,
+          url: '/produk/' + product.id,
+        });
+
+        return product;
+      }
     });
 
     return { product };
@@ -174,7 +198,7 @@ export class ProductService {
       const startTimeRequest = dayjs(updateProductRequest.startTime);
       const endTimeRequest = dayjs(updateProductRequest.endTime);
 
-      let startTime = now
+      const startTime = now
         .hour(startTimeRequest.hour())
         .minute(startTimeRequest.minute())
         .second(0);
@@ -274,7 +298,7 @@ export class ProductService {
     productId: string,
     account: Account,
   ): Promise<FindProductByIdResponse> {
-    let product = await this.productRepository.getByIdWithSeller({
+    const product = await this.productRepository.getByIdWithSeller({
       id: productId,
     });
 

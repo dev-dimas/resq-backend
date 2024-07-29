@@ -60,7 +60,7 @@ export class CustomerService {
         const startDate = dayjs(product.startTime);
         const endDate = dayjs(product.endTime);
 
-        let startTimeSell = dayjs(product.isDaily ? now : product.startTime)
+        const startTimeSell = dayjs(product.isDaily ? now : product.startTime)
           .hour(startDate.hour())
           .minute(startDate.minute());
         let endTimeSell = dayjs(product.isDaily ? now : product.endTime)

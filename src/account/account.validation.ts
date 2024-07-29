@@ -18,6 +18,10 @@ export class AccountValidation {
     name: z.string().min(1),
   });
 
+  static readonly UPDATE_NOTIFICATION_TOKEN: ZodType = z.object({
+    token: z.string().nullable(),
+  });
+
   static readonly CHANGE_PASSWORD: ZodType = z.object({
     currentPassword: z.string().min(8),
     newPassword: z.string().min(8),

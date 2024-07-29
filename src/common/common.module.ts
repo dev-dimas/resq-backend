@@ -8,6 +8,7 @@ import { ErrorFilter } from './error.filter';
 import { PrismaService } from './prisma.service';
 import { ImageService } from './image.service';
 import { ValidationService } from './validation.service';
+import { NotificationService } from './notification.service';
 
 @Global()
 @Module({
@@ -22,11 +23,17 @@ import { ValidationService } from './validation.service';
   ],
   providers: [
     ImageService,
+    NotificationService,
     PrismaService,
     ValidationService,
     { provide: APP_FILTER, useClass: ErrorFilter },
   ],
-  exports: [ImageService, PrismaService, ValidationService],
+  exports: [
+    ImageService,
+    NotificationService,
+    PrismaService,
+    ValidationService,
+  ],
 })
 export class CommonModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

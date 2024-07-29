@@ -8,17 +8,18 @@ datasource db {
 }
 
 model Account {
-  id        String    @id @unique @default(uuid())
-  email     String    @unique
-  name      String
-  password  String
-  avatar    String?
-  isSeller  Boolean   @map("is_seller")
-  token     String?
-  customer  Customer?
-  seller    Seller?
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
+  id            String    @id @unique @default(uuid())
+  email         String    @unique
+  name          String
+  password      String
+  avatar        String?
+  isSeller      Boolean   @map("is_seller")
+  token         String?
+  expoPushToken String?   @map("expo_push_token")
+  customer      Customer?
+  seller        Seller?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
 }
 
 model Customer {

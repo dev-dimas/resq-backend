@@ -151,4 +151,29 @@ export class SellerRepository {
       },
     });
   }
+
+  async getSubscribers(params: { id: string }): Promise<
+    Prisma.SellerGetPayload<{
+      select: {
+        subscriber: {
+          select: {
+            customerId: true;
+          };
+        };
+      };
+    }>[]
+  > {
+    return await this.prisma.seller.findMany({
+      where: {
+        accountId: params.id,
+      },
+      select: {
+        subscriber: {
+          select: {
+            customerId: true,
+          },
+        },
+      },
+    });
+  }
 }

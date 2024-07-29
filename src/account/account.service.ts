@@ -18,6 +18,7 @@ import {
   LoginAccountResponse,
   RegisterAccountRequest,
   RegisterAccountResponse,
+  SetNotificationRequest,
   UpdateLocationRequest,
   UpdateLocationResponse,
 } from 'src/model/account.model';
@@ -109,6 +110,22 @@ export class AccountService {
     });
 
     return { email: updatedProfile.email, name: updatedProfile.name };
+  }
+
+  async updateNotificationToken(
+    request: SetNotificationRequest,
+    account: Account,
+  ): Promise<void> {
+    const setNotificationRequest: SetNotificationRequest =
+      this.validationService.validate(
+        AccountValidation.UPDATE_NOTIFICATION_TOKEN,
+        request,
+      );
+
+    await this.accountRepository.updateNotificationToken({
+      id: account.id,
+      token: setNotificationRequest.token,
+    });
   }
 
   async editAvatar(

@@ -33,6 +33,10 @@ export class EditProfileResponse {
   name: string;
 }
 
+export class SetNotificationRequest {
+  token: string | null;
+}
+
 export class EditAvatarRequest {
   @ApiProperty({ type: 'string', format: 'binary' })
   avatar: any;

@@ -78,6 +78,20 @@ export class AccountRepository {
     });
   }
 
+  async updateNotificationToken(params: {
+    id: string;
+    token: string | null;
+  }): Promise<void> {
+    await this.prisma.account.update({
+      where: {
+        id: params.id,
+      },
+      data: {
+        expoPushToken: params.token || null,
+      },
+    });
+  }
+
   async updateAccountAvatar(params: {
     id: string;
     path: string | null;

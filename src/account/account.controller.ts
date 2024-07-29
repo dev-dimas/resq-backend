@@ -24,6 +24,7 @@ import {
   LoginAccountResponse,
   RegisterAccountRequest,
   RegisterAccountResponse,
+  SetNotificationRequest,
   UpdateLocationRequest,
   UpdateLocationResponse,
 } from 'src/model/account.model';
@@ -89,6 +90,19 @@ export class AccountController {
   ): Promise<WebResponse<EditProfileResponse>> {
     const result = await this.accountService.editProfile(request, account);
     return { message: 'Account updated successfully!', data: result };
+  }
+
+  @Post('notification')
+  @HttpCode(200)
+  @ApiBearerAuth()
+  async updateNotificationToken(
+    @AuthUser() account: Account,
+    @Body() request: SetNotificationRequest,
+  ): Promise<WebResponse> {
+    await this.accountService.updateNotificationToken(request, account);
+    return {
+      message: `Notification ${request.token ? 'set' : 'unset'} successfully!`,
+    };
   }
 
   @Post('avatar')

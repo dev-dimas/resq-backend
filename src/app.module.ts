@@ -8,6 +8,8 @@ import { ProductModule } from './product/product.module';
 import { HaversineModule } from './utils/haversine/haversine.module';
 import { SeedModule } from './utils/seed/seed.module';
 import { SellerModule } from './seller/seller.module';
+import { NotificationModule } from './notification/notification.module';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { SellerModule } from './seller/seller.module';
       rootPath: path.join(__dirname, '..', '..', 'assets'),
     }),
     SellerModule,
+    NotificationModule,
   ],
+  providers: [AppService],
 })
 export class AppModule {}
