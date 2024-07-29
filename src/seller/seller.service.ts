@@ -56,23 +56,37 @@ export class SellerService {
           return isAvailable;
         })
         .map((product) => {
+          let isOnSale = false;
+
           const startDate = dayjs(product.startTime);
           const endDate = dayjs(product.endTime);
 
-          const startTimeSell = dayjs(product.isDaily ? now : product.startTime)
-            .hour(startDate.hour())
-            .minute(startDate.minute());
-          let endTimeSell = dayjs(product.isDaily ? now : product.endTime)
-            .hour(endDate.hour())
-            .minute(endDate.minute());
+          if (now.isAfter(startDate) && now.isBefore(endDate)) {
+            isOnSale = true;
+          } else if (!product.isDaily) {
+            isOnSale = false;
+          } else {
+            const startTimeSell = dayjs(
+              product.isDaily ? now : product.startTime,
+            )
+              .hour(startDate.hour())
+              .minute(startDate.minute());
+            let endTimeSell = dayjs(product.isDaily ? now : product.endTime)
+              .hour(endDate.hour())
+              .minute(endDate.minute());
 
-          if (product.isDaily && startTimeSell.isAfter(endTimeSell)) {
-            endTimeSell = endTimeSell.add(1, 'day');
+            if (product.isDaily && startTimeSell.isAfter(endTimeSell)) {
+              endTimeSell = endTimeSell.add(1, 'day');
+            }
+
+            if (now.isAfter(startTimeSell) && now.isBefore(endTimeSell)) {
+              isOnSale = true;
+            }
           }
 
           return {
             ...product,
-            isOnSale: now.isAfter(startTimeSell) && now.isBefore(endTimeSell),
+            isOnSale,
           };
         }),
     };

@@ -60,6 +60,14 @@ export class CustomerService {
         const startDate = dayjs(product.startTime);
         const endDate = dayjs(product.endTime);
 
+        if (now.isAfter(startDate) && now.isBefore(endDate)) {
+          return (isAvailable = true);
+        }
+
+        if (!product.isDaily) {
+          return (isAvailable = false);
+        }
+
         const startTimeSell = dayjs(product.isDaily ? now : product.startTime)
           .hour(startDate.hour())
           .minute(startDate.minute());
@@ -73,6 +81,14 @@ export class CustomerService {
 
         if (now.isAfter(startTimeSell) && now.isBefore(endTimeSell))
           isAvailable = true;
+
+        console.log('isDaily');
+        console.log('now', now.format());
+        console.log('startDate', startDate.format());
+        console.log('endDate', endDate.format());
+        console.log('startTimeSell', startTimeSell.format());
+        console.log('endTimeSell', endTimeSell.format());
+        console.log('isAvailable', isAvailable);
 
         return isAvailable;
       })
