@@ -174,6 +174,7 @@ export class AccountRepository {
       },
       data: {
         token: null,
+        expoPushToken: null,
       },
     });
   }
