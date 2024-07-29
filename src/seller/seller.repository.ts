@@ -14,6 +14,8 @@ export class SellerRepository {
             name: true;
             email: true;
             avatar: true;
+            expoPushToken: true;
+            token: true;
           };
         };
         latitude: true;
@@ -50,6 +52,8 @@ export class SellerRepository {
             name: true,
             email: true,
             avatar: true,
+            expoPushToken: true,
+            token: true,
           },
         },
         latitude: true,

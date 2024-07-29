@@ -14,6 +14,8 @@ export class CustomerRepository {
             name: true;
             email: true;
             avatar: true;
+            expoPushToken: true;
+            token: true;
           };
         };
         latitude: true;
@@ -29,6 +31,8 @@ export class CustomerRepository {
             name: true,
             email: true,
             avatar: true,
+            expoPushToken: true,
+            token: true,
           },
         },
         latitude: true,
