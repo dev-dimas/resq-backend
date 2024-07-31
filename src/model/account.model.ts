@@ -50,6 +50,7 @@ export class ChangePasswordRequest {
 export class UpdateLocationRequest {
   latitude: number;
   longitude: number;
+  address: string;
 }
 
 export class UpdateLocationResponse {

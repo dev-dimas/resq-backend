@@ -107,6 +107,7 @@ export class ProductService {
 
     const product = await this.prismaService.$transaction(async (prisma) => {
       const filename = await this.imageService.saveTo('product', images);
+      const blurHash = await this.imageService.generateBlurhash(images);
 
       const now = dayjs();
       const startTimeRequest = dayjs(createProductRequest.startTime);
@@ -134,6 +135,7 @@ export class ProductService {
         productData: createProductRequest,
         imagePath: filename,
         account,
+        blurHash,
       });
 
       if (now.isAfter(startTime) && now.isBefore(endTime)) {
@@ -186,10 +188,12 @@ export class ProductService {
 
     const product = await this.prismaService.$transaction(async (prisma) => {
       let filename = undefined;
+      let blurHash = undefined;
 
       if (images) {
         filename = await this.imageService.saveTo('product', images);
         await this.imageService.removeFile(existingProduct.images[0]);
+        blurHash = await this.imageService.generateBlurhash(images);
       }
 
       const now = dayjs(
@@ -220,6 +224,7 @@ export class ProductService {
         productData: updateProductRequest,
         productId,
         imagePath: filename,
+        blurHash,
         account,
       });
     });
@@ -316,7 +321,6 @@ export class ProductService {
     );
 
     return {
-      customer,
       product: {
         ...product,
         seller: {

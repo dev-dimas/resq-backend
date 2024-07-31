@@ -4,8 +4,10 @@ export class SellerDashboardResponse {
   name: string;
   email: string;
   avatar: string;
+  avatarBlurHash: string;
   latitude: string;
   longitude: string;
+  address: string;
   subscriber: number;
   products: Prisma.ProductGetPayload<{
     select: {
@@ -27,8 +29,10 @@ export class GetSellerDataResponse {
   accountId: string;
   name: string;
   avatar: string;
+  avatarBlurHash: string;
   latitude: string;
   longitude: string;
+  address: string;
   subscriber: number;
   products: (Prisma.ProductGetPayload<{
     select: {
@@ -36,6 +40,7 @@ export class GetSellerDataResponse {
       name: true;
       price: true;
       images: true;
+      imageBlurHash: true;
       startTime: true;
       endTime: true;
       isDaily: true;

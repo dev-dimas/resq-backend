@@ -11,7 +11,6 @@ export class SearchProductResponse {
 }
 
 export class FindProductByIdResponse {
-  customer: Customer;
   product: Prisma.ProductGetPayload<{
     include: {
       seller: {
@@ -25,6 +24,7 @@ export class FindProductByIdResponse {
           };
           latitude: true;
           longitude: true;
+          address: true;
         };
       };
     };

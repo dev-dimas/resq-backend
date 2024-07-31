@@ -95,6 +95,7 @@ export class AccountRepository {
   async updateAccountAvatar(params: {
     id: string;
     path: string | null;
+    blurHash: string | null;
   }): Promise<void> {
     await this.prisma.account.update({
       where: {
@@ -102,6 +103,7 @@ export class AccountRepository {
       },
       data: {
         avatar: params.path || null,
+        avatarBlurHash: params.blurHash || null,
       },
     });
   }
@@ -124,6 +126,7 @@ export class AccountRepository {
     account: Account;
     latitude: string;
     longitude: string;
+    address: string;
   }) {
     if (params.account.isSeller) {
       return await this.prisma.seller.update({
@@ -133,10 +136,12 @@ export class AccountRepository {
         data: {
           latitude: params.latitude,
           longitude: params.longitude,
+          address: params.address,
         },
         select: {
           latitude: true,
           longitude: true,
+          address: true,
         },
       });
     }
@@ -146,12 +151,14 @@ export class AccountRepository {
         accountId: params.account.id,
       },
       data: {
-        latitude: `${params.latitude}`,
-        longitude: `${params.longitude}`,
+        latitude: params.latitude,
+        longitude: params.longitude,
+        address: params.address,
       },
       select: {
         latitude: true,
         longitude: true,
+        address: true,
       },
     });
   }

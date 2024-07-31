@@ -8,18 +8,19 @@ datasource db {
 }
 
 model Account {
-  id            String    @id @unique @default(uuid())
-  email         String    @unique
-  name          String
-  password      String
-  avatar        String?
-  isSeller      Boolean   @map("is_seller")
-  token         String?
-  expoPushToken String?   @map("expo_push_token")
-  customer      Customer?
-  seller        Seller?
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id             String    @id @unique @default(uuid())
+  email          String    @unique
+  name           String
+  password       String
+  avatar         String?
+  avatarBlurHash String?   @map("avatar_blur_hash")
+  isSeller       Boolean   @map("is_seller")
+  token          String?
+  expoPushToken  String?   @map("expo_push_token")
+  customer       Customer?
+  seller         Seller?
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
 }
 
 model Customer {
@@ -27,6 +28,7 @@ model Customer {
   account      Account    @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   latitude     String?
   longitude    String?
+  address      String?
   favorite     Favorite?
   subscription Subscribe?
   createdAt    DateTime   @default(now()) @map("created_at")
@@ -38,6 +40,7 @@ model Seller {
   account    Account     @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   latitude   String?
   longitude  String?
+  address    String?
   product    Product[]
   subscriber Subscribe[]
   createdAt  DateTime    @default(now()) @map("created_at")
@@ -58,22 +61,23 @@ model Category {
 }
 
 model Product {
-  id           String     @id @unique @default(uuid())
-  sellerId     String     @map("seller_id")
-  seller       Seller     @relation(fields: [sellerId], references: [accountId], onDelete: Cascade, onUpdate: Cascade)
-  categoryName String     @map("category_name")
-  category     Category   @relation(fields: [categoryName], references: [name])
-  name         String
-  description  String
-  price        String
-  images       String[]
-  startTime    DateTime   @map("start_time")
-  endTime      DateTime   @map("end_time")
-  isDaily      Boolean    @map("is_daily")
-  isActive     Boolean    @map("is_active")
-  favorite     Favorite[]
-  createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
+  id            String     @id @unique @default(uuid())
+  sellerId      String     @map("seller_id")
+  seller        Seller     @relation(fields: [sellerId], references: [accountId], onDelete: Cascade, onUpdate: Cascade)
+  categoryName  String     @map("category_name")
+  category      Category   @relation(fields: [categoryName], references: [name])
+  name          String
+  description   String
+  price         String
+  images        String[]
+  imageBlurHash String?    @map("image_blur_hash")
+  startTime     DateTime   @map("start_time")
+  endTime       DateTime   @map("end_time")
+  isDaily       Boolean    @map("is_daily")
+  isActive      Boolean    @map("is_active")
+  favorite      Favorite[]
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
 }
 
 model Favorite {

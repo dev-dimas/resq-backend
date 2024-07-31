@@ -20,6 +20,7 @@ export class SellerService {
       ...seller.account,
       latitude: seller.latitude,
       longitude: seller.longitude,
+      address: seller.address,
       subscriber: seller.subscriber.length,
       products: seller.product,
     };
@@ -38,8 +39,10 @@ export class SellerService {
       accountId: seller.accountId,
       name: seller.account.name,
       avatar: seller.account.avatar,
+      avatarBlurHash: seller.account.avatarBlurHash,
       latitude: seller.latitude,
       longitude: seller.longitude,
+      address: seller.address,
       subscriber: seller.subscriber.length,
       products: seller.product
         .filter((product) => {

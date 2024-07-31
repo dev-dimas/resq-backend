@@ -82,14 +82,6 @@ export class CustomerService {
         if (now.isAfter(startTimeSell) && now.isBefore(endTimeSell))
           isAvailable = true;
 
-        console.log('isDaily');
-        console.log('now', now.format());
-        console.log('startDate', startDate.format());
-        console.log('endDate', endDate.format());
-        console.log('startTimeSell', startTimeSell.format());
-        console.log('endTimeSell', endTimeSell.format());
-        console.log('isAvailable', isAvailable);
-
         return isAvailable;
       })
       .map((product) => {
@@ -110,6 +102,7 @@ export class CustomerService {
       ...customer.account,
       latitude: customer.latitude,
       longitude: customer.longitude,
+      address: customer.address,
       products: availableProducts,
     };
   }
@@ -127,6 +120,7 @@ export class CustomerService {
         accountId: seller.accountId,
         latitude: seller.latitude,
         longitude: seller.longitude,
+        address: seller.address,
         ...seller.account,
         subscriber: seller.subscriber.length,
       };
@@ -217,6 +211,7 @@ export class CustomerService {
         id: product.id,
         name: product.name,
         images: product.images,
+        imageBlurHash: product.imageBlurHash,
         price: product.price,
         distance: this.haversineService.calculateDistance(
           customer.latitude,

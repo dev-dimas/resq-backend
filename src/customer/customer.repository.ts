@@ -14,12 +14,14 @@ export class CustomerRepository {
             name: true;
             email: true;
             avatar: true;
+            avatarBlurHash: true;
             expoPushToken: true;
             token: true;
           };
         };
         latitude: true;
         longitude: true;
+        address: true;
       };
     }>
   > {
@@ -31,12 +33,14 @@ export class CustomerRepository {
             name: true,
             email: true,
             avatar: true,
+            avatarBlurHash: true,
             expoPushToken: true,
             token: true,
           },
         },
         latitude: true,
         longitude: true,
+        address: true,
       },
     });
   }
@@ -54,11 +58,13 @@ export class CustomerRepository {
           select: {
             name: true;
             avatar: true;
+            avatarBlurHash: true;
           };
         };
         accountId: true;
         latitude: true;
         longitude: true;
+        address: true;
         subscriber: {
           select: {
             _count: true;
@@ -80,11 +86,13 @@ export class CustomerRepository {
           select: {
             name: true,
             avatar: true,
+            avatarBlurHash: true,
           },
         },
         accountId: true,
         latitude: true,
         longitude: true,
+        address: true,
         subscriber: {
           select: {
             _count: true,
@@ -159,6 +167,7 @@ export class CustomerRepository {
                 name: true;
                 price: true;
                 images: true;
+                imageBlurHash: true;
                 seller: {
                   select: {
                     latitude: true;
@@ -185,6 +194,7 @@ export class CustomerRepository {
                 name: true,
                 price: true,
                 images: true,
+                imageBlurHash: true,
                 seller: {
                   select: {
                     latitude: true,

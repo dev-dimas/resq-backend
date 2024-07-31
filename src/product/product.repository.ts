@@ -94,10 +94,12 @@ export class ProductRepository {
                 id: true;
                 name: true;
                 avatar: true;
+                avatarBlurHash: true;
               };
             };
             latitude: true;
             longitude: true;
+            address: true;
             subscriber: {
               select: {
                 _count: true;
@@ -119,10 +121,12 @@ export class ProductRepository {
               select: {
                 name: true,
                 avatar: true,
+                avatarBlurHash: true,
               },
             },
             latitude: true,
             longitude: true,
+            address: true,
             subscriber: {
               select: {
                 _count: true,
@@ -141,6 +145,7 @@ export class ProductRepository {
     >;
     productData: CreateProductRequest;
     imagePath: string;
+    blurHash: string;
     account: Account;
   }): Promise<Product> {
     return await params.prisma.product.create({
@@ -149,6 +154,7 @@ export class ProductRepository {
         description: params.productData.description,
         price: params.productData.price,
         images: [params.imagePath],
+        imageBlurHash: params.blurHash,
         categoryName: params.productData.categoryName,
         startTime: params.productData.startTime,
         endTime: params.productData.endTime,
@@ -167,6 +173,7 @@ export class ProductRepository {
     productData: UpdateProductRequest;
     productId: string;
     imagePath: string;
+    blurHash: string;
     account: Account;
   }): Promise<Product> {
     return await params.prisma.product.update({
@@ -179,6 +186,7 @@ export class ProductRepository {
         description: params.productData.description || undefined,
         price: params.productData.price || undefined,
         images: params.imagePath ? [params.imagePath] : undefined,
+        imageBlurHash: params.blurHash || undefined,
         categoryName: params.productData.categoryName || undefined,
         startTime: params.productData.startTime || undefined,
         endTime: params.productData.endTime || undefined,

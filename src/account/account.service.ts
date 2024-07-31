@@ -135,10 +135,12 @@ export class AccountService {
     await this.deleteAvatarFromStorage(account);
 
     const filename = await this.imageService.saveTo('avatar', avatar);
+    const blurHash = await this.imageService.generateBlurhash(avatar);
 
     await this.accountRepository.updateAccountAvatar({
       id: account.id,
       path: filename,
+      blurHash,
     });
   }
 
@@ -148,6 +150,7 @@ export class AccountService {
     await this.accountRepository.updateAccountAvatar({
       id: account.id,
       path: null,
+      blurHash: null,
     });
   }
 
@@ -200,6 +203,7 @@ export class AccountService {
       account: account,
       latitude: `${updateLocationRequest.latitude}`,
       longitude: `${updateLocationRequest.longitude}`,
+      address: updateLocationRequest.address,
     });
   }
 

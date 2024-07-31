@@ -4,6 +4,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import path from 'path';
 import sharp from 'sharp';
 import { Logger } from 'winston';
+import { encode } from 'blurhash';
 
 @Injectable()
 export class ImageService {
@@ -28,6 +29,26 @@ export class ImageService {
       .toFile(path.join('uploads', dir, filename));
 
     return `/uploads/${dir}/${filename}`;
+  }
+
+  async generateBlurhash(image: Express.Multer.File): Promise<string> {
+    const imageBuffer = await sharp(image.buffer)
+      .raw()
+      .ensureAlpha()
+      .resize(32, 32, { fit: 'inside' })
+      .toBuffer({ resolveWithObject: true });
+
+    const { data, info } = imageBuffer;
+
+    const blurhash = encode(
+      new Uint8ClampedArray(data),
+      info.width,
+      info.height,
+      7,
+      7,
+    );
+
+    return blurhash;
   }
 
   async removeFile(dir: string): Promise<void> {

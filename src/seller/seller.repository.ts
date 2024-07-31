@@ -14,12 +14,14 @@ export class SellerRepository {
             name: true;
             email: true;
             avatar: true;
+            avatarBlurHash: true;
             expoPushToken: true;
             token: true;
           };
         };
         latitude: true;
         longitude: true;
+        address: true;
         subscriber: {
           select: {
             _count: true;
@@ -52,12 +54,14 @@ export class SellerRepository {
             name: true,
             email: true,
             avatar: true,
+            avatarBlurHash: true,
             expoPushToken: true,
             token: true,
           },
         },
         latitude: true,
         longitude: true,
+        address: true,
         subscriber: {
           select: {
             _count: true,
@@ -97,10 +101,12 @@ export class SellerRepository {
           select: {
             name: true;
             avatar: true;
+            avatarBlurHash: true;
           };
         };
         latitude: true;
         longitude: true;
+        address: true;
         subscriber: {
           select: {
             _count: true;
@@ -112,6 +118,7 @@ export class SellerRepository {
             name: true;
             price: true;
             images: true;
+            imageBlurHash: true;
             isActive: true;
             isDaily: true;
             startTime: true;
@@ -131,10 +138,12 @@ export class SellerRepository {
           select: {
             name: true,
             avatar: true,
+            avatarBlurHash: true,
           },
         },
         latitude: true,
         longitude: true,
+        address: true,
         subscriber: {
           select: {
             _count: true,
@@ -146,6 +155,7 @@ export class SellerRepository {
             name: true,
             price: true,
             images: true,
+            imageBlurHash: true,
             isActive: true,
             isDaily: true,
             startTime: true,

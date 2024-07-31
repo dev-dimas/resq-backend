@@ -4,8 +4,10 @@ export class CustomerDashboardResponse {
   name: string;
   email: string;
   avatar: string;
+  avatarBlurHash: string;
   latitude: string;
   longitude: string;
+  address: string;
   products: (Product & {
     latitude: string;
     longitude: string;
@@ -17,8 +19,10 @@ export class SubscriptionListResponse {
   accountId: string;
   latitude: string | null;
   longitude: string | null;
+  address: string;
   name: string;
   avatar: string | null;
+  avatarBlurHash: string | null;
   subscriber: number;
 }
 
@@ -34,6 +38,7 @@ export class FavoriteListResponse {
   id: string;
   name: string;
   images: string[];
+  imageBlurHash: string;
   price: string;
   distance: number;
 }
