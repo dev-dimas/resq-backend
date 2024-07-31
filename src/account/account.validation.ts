@@ -30,6 +30,7 @@ export class AccountValidation {
   static readonly UPDATE_LOCATION: ZodType = z.object({
     latitude: z.number(),
     longitude: z.number(),
+    address: z.string().min(1),
   });
 
   static readonly LOGOUT: ZodType = z.object({
