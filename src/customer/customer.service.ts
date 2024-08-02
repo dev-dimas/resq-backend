@@ -68,20 +68,25 @@ export class CustomerService {
           return (isAvailable = false);
         }
 
-        const startTimeSell = dayjs(product.isDaily ? now : product.startTime)
+        let startTimeSell = dayjs(now)
           .hour(startDate.hour())
           .minute(startDate.minute());
-        let endTimeSell = dayjs(product.isDaily ? now : product.endTime)
+        let endTimeSell = dayjs(now)
           .hour(endDate.hour())
           .minute(endDate.minute());
 
-        if (product.isDaily && startTimeSell.isAfter(endTimeSell)) {
-          endTimeSell = endTimeSell.add(1, 'day');
+        if (startTimeSell.isAfter(endTimeSell)) {
+          startTimeSell = startTimeSell.subtract(1, 'day');
         }
 
         if (now.isAfter(startTimeSell) && now.isBefore(endTimeSell))
           isAvailable = true;
-
+        // console.log('Now', now.format());
+        // console.log('Start Date', startDate.format());
+        // console.log('End Date', endDate.format());
+        // console.log('Start Time Sell', startTimeSell.format());
+        // console.log('End Time Sell', endTimeSell.format());
+        // console.log('Is Available', isAvailable);
         return isAvailable;
       })
       .map((product) => {
