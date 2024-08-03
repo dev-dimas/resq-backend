@@ -76,8 +76,13 @@ export class SellerService {
               .hour(endDate.hour())
               .minute(endDate.minute());
 
-            if (startTimeSell.isAfter(endTimeSell)) {
+            if (
+              startTimeSell.isAfter(endTimeSell) &&
+              now.isBefore(endTimeSell)
+            ) {
               startTimeSell = startTimeSell.subtract(1, 'day');
+            } else if (now.isAfter(startTimeSell) && now.isAfter(endTimeSell)) {
+              endTimeSell = endTimeSell.add(1, 'day');
             }
 
             if (now.isAfter(startTimeSell) && now.isBefore(endTimeSell)) {
