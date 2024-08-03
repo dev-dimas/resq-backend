@@ -81,7 +81,11 @@ export class SellerService {
               now.isBefore(endTimeSell)
             ) {
               startTimeSell = startTimeSell.subtract(1, 'day');
-            } else if (now.isAfter(startTimeSell) && now.isAfter(endTimeSell)) {
+            } else if (
+              startTimeSell.isAfter(endTimeSell) &&
+              now.isAfter(startTimeSell) &&
+              now.isAfter(endTimeSell)
+            ) {
               endTimeSell = endTimeSell.add(1, 'day');
             }
 
