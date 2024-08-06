@@ -172,6 +172,15 @@ export class SellerRepository {
         subscriber: {
           select: {
             customerId: true;
+            customer: {
+              select: {
+                account: {
+                  select: {
+                    expoPushToken: true;
+                  };
+                };
+              };
+            };
           };
         };
       };
@@ -185,6 +194,15 @@ export class SellerRepository {
         subscriber: {
           select: {
             customerId: true,
+            customer: {
+              select: {
+                account: {
+                  select: {
+                    expoPushToken: true,
+                  },
+                },
+              },
+            },
           },
         },
       },

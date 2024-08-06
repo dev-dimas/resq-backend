@@ -146,13 +146,15 @@ export class ProductService {
         if (!result) return;
 
         const subscribers = result.flatMap((item) =>
-          item.subscriber.map((sub) => sub.customerId),
+          item.subscriber
+            .map((sub) => sub.customer.account.expoPushToken)
+            .filter((token) => token),
         );
 
         await this.notificationService.sendNotification(subscribers, {
           title: account.name,
           body: `Produk baru!. Cobain ${product.name} yuk di toko kami 😍.`,
-          url: '/produk/' + product.id,
+          url: '/product/' + product.id,
         });
 
         return product;
