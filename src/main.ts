@@ -29,8 +29,9 @@ async function bootstrap() {
     customSiteTitle: 'Resq API',
     customCss:
       swaggerTheme.getBuffer(SwaggerThemeNameEnum.ONE_DARK) +
+      'body {background-color: var(--all-bg-color) !important; color: white !important;}' +
       ".topbar-wrapper {content:url('/assets/favicon.png'); width:100px; height:auto;}" +
-      '.topbar-wrapper svg { visibility: hidden; }',
+      '.topbar-wrapper svg {visibility: hidden;}',
     swaggerOptions: {
       persistAuthorization: true,
     },

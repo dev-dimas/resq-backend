@@ -21,11 +21,11 @@ import { AppService } from './app.service';
     SeedModule,
     ServeStaticModule.forRoot({
       serveRoot: '/uploads/',
-      rootPath: path.join(__dirname, '..', '..', 'uploads'),
+      rootPath: path.join(__dirname, '..', 'uploads'),
     }),
     ServeStaticModule.forRoot({
       serveRoot: '/assets/',
-      rootPath: path.join(__dirname, '..', '..', 'assets'),
+      rootPath: path.join(__dirname, '..', 'assets'),
     }),
     SellerModule,
     NotificationModule,
