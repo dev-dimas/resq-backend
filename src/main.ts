@@ -2,8 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { version } from '../package.json';
 import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes';
+import metadata from './metadata';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,10 +19,11 @@ async function bootstrap() {
       'dev.dimasmaulana@gmail.com',
     )
     .addBearerAuth()
-    .setVersion(version || '')
+    .setVersion('1.0')
     .build();
 
   const swaggerTheme = new SwaggerTheme();
+  await SwaggerModule.loadPluginMetadata(metadata);
   const document = SwaggerModule.createDocument(app, configSwagger);
   SwaggerModule.setup('/', app, document, {
     customfavIcon: '/assets/favicon.ico',

@@ -10,6 +10,7 @@
       }
     },
     "typeCheck": true,
+    "deleteOutDir": true,
     "plugins": [
       {
         "name": "@nestjs/swagger",
@@ -17,7 +18,6 @@
           "dtoFileNameSuffix": [".model.ts"]
         }
       }
-    ],
-    "deleteOutDir": true
+    ]
   }
 }
