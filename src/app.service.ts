@@ -7,5 +7,6 @@ export class AppService implements OnApplicationBootstrap {
 
   async onApplicationBootstrap(): Promise<any> {
     await this.seedService.seedCategory();
+    await this.seedService.seedSellerAndProdyct();
   }
 }
