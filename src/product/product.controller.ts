@@ -38,22 +38,16 @@ export class ProductController {
   /**
    * Search By Keyword
    */
-  @Get()
-  @ApiBearerAuth()
-  async search(
-    @AuthCustomer() account: Account,
-    @Query('search') keyword: string,
-  ): Promise<WebResponse<SearchProductResponse>> {
-    const result = await this.productService.find(keyword, account);
+  // @Get()
+  // @ApiBearerAuth()
+  // async search(
+  //   @AuthCustomer() account: Account,
+  //   @Query('search') keyword: string,
+  // ): Promise<WebResponse<SearchProductResponse>> {
+  //   const result = await this.productService.find(keyword, account);
 
-    return { message: 'Success!', data: result };
-  }
-
-  // !! Delete When All Product Controller Is Completed
-  @Get('all')
-  async all() {
-    return await this.prismaService.product.findMany();
-  }
+  //   return { message: 'Success!', data: result };
+  // }
 
   @Post()
   @UseInterceptors(

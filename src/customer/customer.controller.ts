@@ -19,16 +19,16 @@ import { CustomerService } from './customer.service';
 export class CustomerController {
   constructor(private customerService: CustomerService) {}
 
-  @Get()
-  @ApiBearerAuth()
-  async getCustomerDashboard(
-    @AuthCustomer() account: Account,
-  ): Promise<WebResponse<any>> {
-    return {
-      message: 'Successfully get customer dashboard',
-      data: await this.customerService.getCustomerDashboard(account),
-    };
-  }
+  // @Get()
+  // @ApiBearerAuth()
+  // async getCustomerDashboard(
+  //   @AuthCustomer() account: Account,
+  // ): Promise<WebResponse<any>> {
+  //   return {
+  //     message: 'Successfully get customer dashboard',
+  //     data: await this.customerService.getCustomerDashboard(account),
+  //   };
+  // }
 
   @Get('subscription')
   @ApiBearerAuth()
