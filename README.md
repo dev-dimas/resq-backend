@@ -1,6 +1,8 @@
 # Resq Backend
 
-Welcome to the Resq Backend repository! This project serves as the backbone of the Resq service, a platform dedicated to connecting leftover food sellers with potential buyers. In this context, leftover food refers to items that need to be sold quickly as they are nearing their expiration date. In a world where food waste is a pressing issue, Resq provides an innovative solution to reduce waste by making leftover food accessible to those nearby, while also benefiting both sellers and buyers.
+<img src="https://github.com/dev-dimas/resq-backend/blob/master/assets/android-chrome-512x512.png?raw=true" width="200" height="200" style="display: block; margin: auto; padding-bottom: 15px" />
+
+Welcome to the Resq Backend repository! This project serves as the backbone of the Resq service, a platform dedicated to connecting leftover food sellers with potential buyers. Leftover food refers to items that need to be sold quickly as they are nearing their expiration date. In a world where food waste is a pressing issue, Resq provides an innovative solution to reduce waste by making leftover food accessible to those nearby, while also benefiting both sellers and buyers.
 
 ## Table of Contents
 
@@ -83,7 +85,9 @@ npm  install
 ```
 
 3. Set up your environment variables:
+
    Copy `.env.example` to `.env` and fill in your configuration details.
+
 4. Run the database migrations :
 
 ```bash
