@@ -1,6 +1,8 @@
 # Resq Backend
 
-<img src="https://github.com/dev-dimas/resq-backend/blob/master/assets/android-chrome-512x512.png?raw=true" width="200" height="200" style="display: block; margin: auto; padding-bottom: 15px" />
+<p align="center">
+<img src="https://github.com/dev-dimas/resq-backend/blob/master/assets/android-chrome-512x512.png?raw=true" width="200" height="200" style="padding-bottom: 15px" />
+</p>
 
 Welcome to the Resq Backend repository! This project serves as the backbone of the Resq service, a platform dedicated to connecting leftover food sellers with potential buyers. Leftover food refers to items that need to be sold quickly as they are nearing their expiration date. In a world where food waste is a pressing issue, Resq provides an innovative solution to reduce waste by making leftover food accessible to those nearby, while also benefiting both sellers and buyers.
 
