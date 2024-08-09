@@ -32,6 +32,30 @@ export class SeedService {
     });
   }
 
+  async seedAdmin(): Promise<void> {
+    const admin = await this.prismaService.admin.findMany();
+
+    if (admin.length > 0) {
+      this.logger.info('Admin already seeded');
+      return;
+    }
+
+    await this.prismaService.account.create({
+      data: {
+        name: 'Admin',
+        email: 'resq@admin.com',
+        password: process.env.ADMIN_PASSWORD,
+        isSeller: false,
+        isActive: true,
+        isAdmin: true,
+
+        admin: {
+          create: {},
+        },
+      },
+    });
+  }
+
   async seedSellerAndProdyct(): Promise<void> {
     const accountDb = await this.prismaService.account.findMany();
     const sellerDb = await this.prismaService.seller.findMany();
@@ -70,6 +94,8 @@ export class SeedService {
         expoPushToken: null,
         isSeller: true,
         token: null,
+        isActive: true,
+        isAdmin: false,
       });
 
       sellers.push({
