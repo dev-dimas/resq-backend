@@ -1,7 +1,7 @@
 export const sellerInherited = [
   {
     id: 1,
-    email: 'jamubupuji@email.com',
+    email: 'jamubupuji@dummy.com',
     password: 'sellerdummy',
     address: 'Lontar, Sambikerep, Surabaya, East Java, Java, 60217, Indonesia',
     isSeller: true,
@@ -10,7 +10,7 @@ export const sellerInherited = [
   },
   {
     id: 2,
-    email: 'siomaybatagorbandungmangenci@email.com',
+    email: 'siomaybatagorbandungmangenci@dummy.com',
     password: 'sellerdummy',
     address:
       'Jalan Yos Sudarso, Medaeng, Waru, Sidoarjo, East Java, Java, 61256, Indonesia',
@@ -20,7 +20,7 @@ export const sellerInherited = [
   },
   {
     id: 3,
-    email: 'erhayajuice@email.com',
+    email: 'erhayajuice@dummy.com',
     password: 'sellerdummy',
     address: 'Geluran, Taman, Sidoarjo, East Java, Java, 60221, Indonesia',
     isSeller: true,
@@ -29,7 +29,7 @@ export const sellerInherited = [
   },
   {
     id: 4,
-    email: 'idolaesdegan@email.com',
+    email: 'idolaesdegan@dummy.com',
     password: 'sellerdummy',
     address: 'Geluran, Taman, Sidoarjo, East Java, Java, 60221, Indonesia',
     isSeller: true,
@@ -38,7 +38,7 @@ export const sellerInherited = [
   },
   {
     id: 5,
-    email: 'gado-gadohandayani@email.com',
+    email: 'gado-gadohandayani@dummy.com',
     password: 'sellerdummy',
     address:
       'Jalan Pacar Keling III, RW 06, Pacar Keling, Tambaksari, Surabaya, East Java, Java, 60131, Indonesia',
@@ -48,7 +48,7 @@ export const sellerInherited = [
   },
   {
     id: 6,
-    email: 'espisangijoassipa354@email.com',
+    email: 'espisangijoassipa354@dummy.com',
     password: 'sellerdummy',
     address:
       'Jalan Dukuh Pakis VI A, RW 03, Dukuh Kupang, Dukuh Pakis, Surabaya, East Java, Java, 60225, Indonesia',
@@ -58,7 +58,7 @@ export const sellerInherited = [
   },
   {
     id: 7,
-    email: 'masakanpadangmustikajaya5@email.com',
+    email: 'masakanpadangmustikajaya5@dummy.com',
     password: 'sellerdummy',
     address:
       'Jalan Graha Kebraon Mas Klumprik Cluster, RW 02, Balas Klumprik, Wiyung, Surabaya, East Java, Java, 60221, Indonesia',
@@ -68,7 +68,7 @@ export const sellerInherited = [
   },
   {
     id: 8,
-    email: 'buburayamcitra@email.com',
+    email: 'buburayamcitra@dummy.com',
     password: 'sellerdummy',
     address:
       'Jalan Letnan Jenderal S. Parman, Waru, Sidoarjo, East Java, Java, 61256, Indonesia',
@@ -78,7 +78,7 @@ export const sellerInherited = [
   },
   {
     id: 9,
-    email: 'nasibakartumbuh@email.com',
+    email: 'nasibakartumbuh@dummy.com',
     password: 'sellerdummy',
     address:
       'Grand Aloha Regency, Wage, Taman, Sidoarjo, East Java, Java, 61256, Indonesia',
@@ -88,7 +88,7 @@ export const sellerInherited = [
   },
   {
     id: 10,
-    email: 'jatayubakery@email.com',
+    email: 'jatayubakery@dummy.com',
     password: 'sellerdummy',
     address: 'Krian, Sidoarjo, East Java, Java, 61262, Indonesia',
     isSeller: true,
@@ -97,7 +97,7 @@ export const sellerInherited = [
   },
   {
     id: 11,
-    email: 'amartasalad@email.com',
+    email: 'amartasalad@dummy.com',
     password: 'sellerdummy',
     address: 'Katimoho, Gresik, East Java, Java, Indonesia',
     isSeller: true,
@@ -106,7 +106,7 @@ export const sellerInherited = [
   },
   {
     id: 12,
-    email: 'lontongsayurpakkumis@email.com',
+    email: 'lontongsayurpakkumis@dummy.com',
     password: 'sellerdummy',
     address:
       'Jalan Siwalankerto Timur 1, RW 05, SiwalanKerto, Wonocolo, Surabaya, East Java, Java, 60236, Indonesia',
@@ -116,7 +116,7 @@ export const sellerInherited = [
   },
   {
     id: 13,
-    email: 'lemperlinda@email.com',
+    email: 'lemperlinda@dummy.com',
     password: 'sellerdummy',
     address:
       'Jalan Palem Selatan I, Pondok Tjandra Indah, Wadungasri, Waru, Sidoarjo, East Java, Java, 60293, Indonesia',
@@ -126,7 +126,7 @@ export const sellerInherited = [
   },
   {
     id: 14,
-    email: 'irmaklepon@email.com',
+    email: 'irmaklepon@dummy.com',
     password: 'sellerdummy',
     address: 'Kedungturi, Taman, Sidoarjo, East Java, Java, 60221, Indonesia',
     isSeller: true,
@@ -135,7 +135,7 @@ export const sellerInherited = [
   },
   {
     id: 15,
-    email: 'aselseafood@email.com',
+    email: 'aselseafood@dummy.com',
     password: 'sellerdummy',
     address: 'Sekardangan, Sidoarjo, East Java, Java, Indonesia',
     isSeller: true,

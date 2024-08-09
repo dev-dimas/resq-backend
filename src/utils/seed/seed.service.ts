@@ -1,11 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Account, Product, Seller } from '@prisma/client';
+import { Account, Prisma, Product, Seller } from '@prisma/client';
 import dayjs from 'dayjs';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { PrismaService } from 'src/common/prisma.service';
 import { Logger } from 'winston';
 import { manualData } from './manualData';
 import { sellerInherited } from './sellerInherited';
+import bcrypt from 'bcrypt';
 
 @Injectable()
 export class SeedService {
@@ -13,6 +14,34 @@ export class SeedService {
     private prismaService: PrismaService,
     @Inject(WINSTON_MODULE_PROVIDER) private logger: Logger,
   ) {}
+
+  private readonly isNeedUpdate: boolean = JSON.parse(
+    process.env.IS_NEED_UPDATE_SEED_DATA || 'false',
+  );
+
+  async cleanSeed() {
+    if (!this.isNeedUpdate) return;
+
+    let query: Prisma.AccountWhereInput[] = [
+      {
+        password: {
+          not: {
+            startsWith: '$2b$',
+          },
+        },
+      },
+    ];
+
+    for (let index = 1; index <= 15; index++) {
+      query.push({ id: { equals: `${index}` } });
+    }
+
+    await this.prismaService.account.deleteMany({
+      where: {
+        OR: query,
+      },
+    });
+  }
 
   async seedCategory(): Promise<void> {
     const category = await this.prismaService.category.findMany();
@@ -44,11 +73,10 @@ export class SeedService {
       data: {
         name: 'Admin',
         email: 'resq@admin.com',
-        password: process.env.ADMIN_PASSWORD,
+        password: await bcrypt.hash(process.env.ADMIN_PASSWORD, 10),
         isSeller: false,
         isActive: true,
         isAdmin: true,
-
         admin: {
           create: {},
         },
@@ -70,7 +98,7 @@ export class SeedService {
       return;
     }
 
-    const password = 'sellerdummy';
+    const password = await bcrypt.hash(process.env.SELLER_DUMMY_PASSWORD, 10);
     const blurHash = 'L3SigQ00~p-:?bV@IVWX%NxuIUoe';
 
     const accounts: Omit<Account, 'createdAt' | 'updatedAt'>[] = [];

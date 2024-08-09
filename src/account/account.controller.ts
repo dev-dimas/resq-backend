@@ -33,6 +33,7 @@ import { SellerDashboardResponse } from 'src/model/seller.model';
 import { WebResponse } from 'src/model/web.model';
 import { SellerService } from 'src/seller/seller.service';
 import { AccountService } from './account.service';
+import { AdminService } from 'src/admin/admin.service';
 
 @Controller('account')
 @ApiTags('Account')
@@ -41,6 +42,7 @@ export class AccountController {
     private accountService: AccountService,
     private customerService: CustomerService,
     private sellerService: SellerService,
+    private adminService: AdminService,
   ) {}
 
   @Get()
@@ -49,10 +51,13 @@ export class AccountController {
     @AuthUser() account: Account,
   ): Promise<WebResponse<CustomerDashboardResponse | SellerDashboardResponse>> {
     const isSeller = account.isSeller;
+    const isAdmin = account.isAdmin;
 
     const dashboard = isSeller
       ? await this.sellerService.getSellerDashboard(account)
-      : await this.customerService.getCustomerDashboard(account);
+      : isAdmin
+        ? await this.adminService.getAdminDashboard(account)
+        : await this.customerService.getCustomerDashboard(account);
 
     if (!dashboard) throw new NotFoundException('Account not found');
 

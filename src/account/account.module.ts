@@ -4,9 +4,10 @@ import { AccountController } from './account.controller';
 import { AccountRepository } from './account.repository';
 import { AccountService } from './account.service';
 import { SellerModule } from 'src/seller/seller.module';
+import { AdminModule } from 'src/admin/admin.module';
 
 @Module({
-  imports: [CustomerModule, SellerModule],
+  imports: [CustomerModule, SellerModule, AdminModule],
   controllers: [AccountController],
   providers: [AccountService, AccountRepository],
   exports: [AccountRepository],

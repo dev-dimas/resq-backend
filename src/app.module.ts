@@ -10,6 +10,7 @@ import { SeedModule } from './utils/seed/seed.module';
 import { SellerModule } from './seller/seller.module';
 import { NotificationModule } from './notification/notification.module';
 import { AppService } from './app.service';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AppService } from './app.service';
     }),
     SellerModule,
     NotificationModule,
+    AdminModule,
   ],
   providers: [AppService],
 })
