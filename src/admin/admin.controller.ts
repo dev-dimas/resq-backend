@@ -6,7 +6,7 @@ import { AuthAdmin } from 'src/common/auth.decorator';
 import { BanAccountRequest } from 'src/model/admin.model';
 import { Account } from '@prisma/client';
 
-@Controller('admin')
+@Controller()
 @ApiTags('Admin')
 @ApiBearerAuth()
 export class AdminController {
