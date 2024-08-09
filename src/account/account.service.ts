@@ -1,6 +1,8 @@
 import {
   ConflictException,
   ForbiddenException,
+  HttpException,
+  HttpStatus,
   Inject,
   Injectable,
 } from '@nestjs/common';
@@ -82,6 +84,8 @@ export class AccountService {
     );
 
     if (!isPasswordMatch) throw new ForbiddenException('Invalid credentials!');
+    if (account.isActive === false)
+      throw new HttpException('Your account has been banned', 423);
 
     const loginToken = uuid();
 

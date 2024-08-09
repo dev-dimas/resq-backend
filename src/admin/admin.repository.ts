@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Complaints, Prisma } from '@prisma/client';
+import { Account, Complaints, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/common/prisma.service';
 
 @Injectable()
@@ -42,6 +42,15 @@ export class AdminRepository {
       products: [],
       complaints,
     };
+  }
+
+  async getAccount(params: { id: string }): Promise<Account> {
+    return await this.prisma.account.findFirst({
+      where: {
+        id: params.id,
+        isAdmin: false,
+      },
+    });
   }
 
   async banAccount(params: { id: string }): Promise<void> {
