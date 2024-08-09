@@ -15,6 +15,7 @@ export class AuthMiddleware implements NestMiddleware {
       const user = await this.prismaService.account.findFirst({
         where: {
           token: token,
+          isActive: true,
         },
       });
 

@@ -16,6 +16,21 @@ export const AuthUser = createParamDecorator(
   },
 );
 
+export const AuthAdmin = createParamDecorator(
+  (data: unknown, context: ExecutionContext) => {
+    const request = context.switchToHttp().getRequest();
+    const user = request.user;
+
+    if (!user) throw new UnauthorizedException('You need to login first!');
+
+    if (user.isAdmin) {
+      return user;
+    } else {
+      throw new UnauthorizedException('Only admin can access this endpoint!');
+    }
+  },
+);
+
 export const AuthCustomer = createParamDecorator(
   (data: unknown, context: ExecutionContext) => {
     const request = context.switchToHttp().getRequest();
