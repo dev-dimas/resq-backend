@@ -15,36 +15,48 @@ model Account {
   avatar         String?
   avatarBlurHash String?   @map("avatar_blur_hash")
   isSeller       Boolean   @map("is_seller")
+  isAdmin        Boolean   @default(false) @map("is_admin")
+  isActive       Boolean   @default(true) @map("is_active")
   token          String?
   expoPushToken  String?   @map("expo_push_token")
+  admin          Admin?
   customer       Customer?
   seller         Seller?
   createdAt      DateTime  @default(now()) @map("created_at")
   updatedAt      DateTime  @updatedAt @map("updated_at")
 }
 
+model Admin {
+  accountId String   @id @unique @map("account_id")
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
 model Customer {
-  accountId    String     @id @unique @map("account_id")
-  account      Account    @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  accountId    String       @id @unique @map("account_id")
+  account      Account      @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   latitude     String?
   longitude    String?
   address      String?
   favorite     Favorite?
   subscription Subscribe?
-  createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
+  complaints   Complaints[]
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
 }
 
 model Seller {
-  accountId  String      @id @unique @map("account_id")
-  account    Account     @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  accountId  String       @id @unique @map("account_id")
+  account    Account      @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   latitude   String?
   longitude  String?
   address    String?
   product    Product[]
   subscriber Subscribe[]
-  createdAt  DateTime    @default(now()) @map("created_at")
-  updatedAt  DateTime    @updatedAt @map("updated_at")
+  complaints Complaints[]
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
 }
 
 model Subscribe {
@@ -74,7 +86,7 @@ model Product {
   startTime     DateTime   @map("start_time")
   endTime       DateTime   @map("end_time")
   isDaily       Boolean    @map("is_daily")
-  isActive      Boolean    @map("is_active")
+  isActive      Boolean    @default(true) @map("is_active")
   favorite      Favorite[]
   createdAt     DateTime   @default(now()) @map("created_at")
   updatedAt     DateTime   @updatedAt @map("updated_at")
@@ -87,4 +99,21 @@ model Favorite {
   product    Product[]
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime  @updatedAt @map("updated_at")
+}
+
+model Complaints {
+  id          String               @id @unique @default(uuid())
+  customerId  String               @map("customer_id")
+  sellerId    String               @map("seller_id")
+  description String
+  status      StatusComplaintsType @default(PENDING)
+  createdAt   DateTime             @default(now()) @map("created_at")
+  updatedAt   DateTime             @updatedAt @map("updated_at")
+  customer    Customer             @relation(fields: [customerId], references: [accountId], onDelete: Cascade, onUpdate: Cascade)
+  seller      Seller               @relation(fields: [sellerId], references: [accountId], onDelete: Cascade, onUpdate: Cascade)
+}
+
+enum StatusComplaintsType {
+  PENDING
+  RESOLVED
 }
