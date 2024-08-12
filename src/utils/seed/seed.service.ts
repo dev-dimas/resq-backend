@@ -99,7 +99,7 @@ export class SeedService {
     }
 
     const password = await bcrypt.hash(process.env.SELLER_DUMMY_PASSWORD, 10);
-    const blurHash = 'L3SigQ00~p-:?bV@IVWX%NxuIUoe';
+    const blurHash = 'L0NdO8?bfQ?b~qj[fQj[fQfQfQfQ';
 
     const accounts: Omit<Account, 'createdAt' | 'updatedAt'>[] = [];
     const sellers: Omit<Seller, 'createdAt' | 'updatedAt'>[] = [];
