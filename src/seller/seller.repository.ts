@@ -99,7 +99,10 @@ export class SellerRepository {
     });
   }
 
-  async getByIdWithProductAndSubscriber(params: { id: string }): Promise<
+  async getByIdWithProductAndSubscriber(params: {
+    id: string;
+    customerId: string;
+  }): Promise<
     Prisma.SellerGetPayload<{
       select: {
         accountId: true;
@@ -131,6 +134,7 @@ export class SellerRepository {
             endTime: true;
           };
         };
+        complaints: true;
       };
     }>
   > {
@@ -169,6 +173,13 @@ export class SellerRepository {
             isDaily: true,
             startTime: true,
             endTime: true,
+          },
+        },
+        complaints: {
+          where: {
+            sellerId: params.id,
+            customerId: params.customerId,
+            status: 'PENDING',
           },
         },
       },

@@ -16,4 +16,9 @@ export class CustomerValidation {
   static readonly UNFAVORITE: ZodType = z.object({
     productId: z.string(),
   });
+
+  static readonly CREATE_REQUEST: ZodType = z.object({
+    sellerId: z.string(),
+    description: z.string().min(1, 'Description is required'),
+  });
 }

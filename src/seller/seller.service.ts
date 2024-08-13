@@ -26,9 +26,13 @@ export class SellerService {
     };
   }
 
-  async getSellerById(sellerId: string): Promise<GetSellerDataResponse> {
+  async getSellerById(
+    sellerId: string,
+    customerId: string,
+  ): Promise<GetSellerDataResponse> {
     const seller = await this.sellerRepository.getByIdWithProductAndSubscriber({
       id: sellerId,
+      customerId,
     });
 
     if (!seller) throw new NotFoundException('Seller not found!');
@@ -44,6 +48,7 @@ export class SellerService {
       longitude: seller.longitude,
       address: seller.address,
       subscriber: seller.subscriber.length,
+      complaint: seller.complaints.length ? seller.complaints[0] : null,
       products: seller.product
         .filter((product) => {
           if (!product.isActive) return false;

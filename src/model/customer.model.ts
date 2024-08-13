@@ -50,3 +50,8 @@ export class AddFavoriteRequest {
 export class RemoveFavoriteRequest {
   productId: string;
 }
+
+export class CreateComplaintRequest {
+  sellerId: string;
+  description: string;
+}

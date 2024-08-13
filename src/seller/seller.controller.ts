@@ -18,7 +18,7 @@ export class SellerController {
     @Param('sellerId')
     sellerId: string,
   ): Promise<WebResponse<GetSellerDataResponse>> {
-    const seller = await this.sellerService.getSellerById(sellerId);
+    const seller = await this.sellerService.getSellerById(sellerId, account.id);
     return { message: 'Success', data: seller };
   }
 }

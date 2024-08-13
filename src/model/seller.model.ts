@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Complaints, Prisma } from '@prisma/client';
 
 export class SellerDashboardResponse {
   name: string;
@@ -34,6 +34,7 @@ export class GetSellerDataResponse {
   longitude: string;
   address: string;
   subscriber: number;
+  complaint: Complaints | null;
   products: (Prisma.ProductGetPayload<{
     select: {
       id: true;

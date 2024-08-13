@@ -5,6 +5,7 @@ import { Account } from '@prisma/client';
 import { AuthCustomer } from 'src/common/auth.decorator';
 import {
   AddFavoriteRequest,
+  CreateComplaintRequest,
   FavoriteListResponse,
   RemoveFavoriteRequest,
   SubscribeRequest,
@@ -108,5 +109,15 @@ export class CustomerController {
   ): Promise<WebResponse> {
     await this.customerService.removeAllFavorite(account);
     return { message: 'Successfully removed all from favorite' };
+  }
+
+  @Post('complaint')
+  @ApiBearerAuth()
+  async createComplaint(
+    @AuthCustomer() account: Account,
+    @Body() request: CreateComplaintRequest,
+  ): Promise<WebResponse> {
+    await this.customerService.createComplaint(account, request);
+    return { message: 'Successfully created complaint' };
   }
 }

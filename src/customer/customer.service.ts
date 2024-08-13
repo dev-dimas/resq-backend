@@ -10,6 +10,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { ValidationService } from 'src/common/validation.service';
 import {
   AddFavoriteRequest,
+  CreateComplaintRequest,
   CustomerDashboardResponse,
   FavoriteListResponse,
   RemoveFavoriteRequest,
@@ -314,5 +315,33 @@ export class CustomerService {
 
   async removeAllFavorite(account: Account): Promise<void> {
     await this.customerRepository.removeAllFavorite({ id: account.id });
+  }
+
+  async createComplaint(
+    account: Account,
+    request: CreateComplaintRequest,
+  ): Promise<void> {
+    const createComplaintRequest: CreateComplaintRequest =
+      await this.validationService.validate(
+        CustomerValidation.CREATE_REQUEST,
+        request,
+      );
+
+    const isPreviousComplaintExist =
+      await this.customerRepository.getPreviousComplaint({
+        id: account.id,
+        sellerId: createComplaintRequest.sellerId,
+      });
+
+    if (isPreviousComplaintExist)
+      throw new ConflictException(
+        'Your complaint for this seller is already exist and still pending!',
+      );
+
+    await this.customerRepository.createComplaint({
+      id: account.id,
+      sellerId: createComplaintRequest.sellerId,
+      description: createComplaintRequest.description,
+    });
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Customer, Prisma } from '@prisma/client';
+import { Complaints, Customer, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/common/prisma.service';
 
 @Injectable()
@@ -311,6 +311,33 @@ export class CustomerRepository {
             },
           },
         },
+      },
+    });
+  }
+
+  async createComplaint(params: {
+    id: string;
+    sellerId: string;
+    description: string;
+  }): Promise<void> {
+    await this.prisma.complaints.create({
+      data: {
+        customerId: params.id,
+        sellerId: params.sellerId,
+        description: params.description,
+      },
+    });
+  }
+
+  async getPreviousComplaint(params: {
+    id: string;
+    sellerId: string;
+  }): Promise<Complaints | null> {
+    return await this.prisma.complaints.findFirst({
+      where: {
+        customerId: params.id,
+        sellerId: params.sellerId,
+        status: 'PENDING',
       },
     });
   }
