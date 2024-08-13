@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Account, Complaints, Prisma } from '@prisma/client';
+import { Account, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/common/prisma.service';
 
 @Injectable()
@@ -19,7 +19,34 @@ export class AdminRepository {
       longitude: null;
       address: null;
       products: [];
-      complaints: Complaints[];
+      complaints: Prisma.ComplaintsGetPayload<{
+        select: {
+          customer: {
+            select: {
+              account: {
+                select: {
+                  name: true;
+                  email: true;
+                  avatar: true;
+                  avatarBlurHash: true;
+                };
+              };
+            };
+          };
+          seller: {
+            select: {
+              account: {
+                select: {
+                  name: true;
+                  email: true;
+                  avatar: true;
+                  avatarBlurHash: true;
+                };
+              };
+            };
+          };
+        };
+      }>[];
     }
   > {
     const account = await this.prisma.account.findFirst({
@@ -33,7 +60,39 @@ export class AdminRepository {
         avatarBlurHash: true,
       },
     });
-    const complaints = await this.prisma.complaints.findMany();
+    const complaints = await this.prisma.complaints.findMany({
+      select: {
+        id: true,
+        description: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+        customer: {
+          select: {
+            account: {
+              select: {
+                name: true,
+                email: true,
+                avatar: true,
+                avatarBlurHash: true,
+              },
+            },
+          },
+        },
+        seller: {
+          select: {
+            account: {
+              select: {
+                name: true,
+                email: true,
+                avatar: true,
+                avatarBlurHash: true,
+              },
+            },
+          },
+        },
+      },
+    });
     return {
       ...account,
       latitude: null,
