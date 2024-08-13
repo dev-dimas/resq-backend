@@ -200,7 +200,7 @@ export class CustomerRepository {
       };
     }>
   > {
-    let favoriteList = await this.prisma.customer.findFirst({
+    const favoriteList = await this.prisma.customer.findFirst({
       where: {
         accountId: params.id,
       },

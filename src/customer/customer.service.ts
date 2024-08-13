@@ -229,9 +229,13 @@ export class CustomerService {
       return {
         id: product.id,
         name: product.name,
+        price: product.price,
         images: product.images,
         imageBlurHash: product.imageBlurHash,
-        price: product.price,
+        startTime: product.startTime,
+        endTime: product.endTime,
+        isDaily: product.isDaily,
+        isActive: product.isActive,
         distance: this.haversineService.calculateDistance(
           customer.latitude,
           customer.longitude,
