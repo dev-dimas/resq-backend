@@ -22,7 +22,7 @@ export class SeedService {
   async cleanSeed() {
     if (!this.isNeedUpdate) return;
 
-    let query: Prisma.AccountWhereInput[] = [
+    const query: Prisma.AccountWhereInput[] = [
       {
         password: {
           not: {

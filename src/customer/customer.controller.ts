@@ -112,12 +112,13 @@ export class CustomerController {
   }
 
   @Post('complaint')
+  @HttpCode(200)
   @ApiBearerAuth()
   async createComplaint(
     @AuthCustomer() account: Account,
     @Body() request: CreateComplaintRequest,
   ): Promise<WebResponse> {
     await this.customerService.createComplaint(account, request);
-    return { message: 'Successfully created complaint' };
+    return { message: 'Successfully create complaint' };
   }
 }
