@@ -47,6 +47,9 @@ export class SellerRepository {
     return await this.prisma.seller.findFirst({
       where: {
         accountId: params.id,
+        account: {
+          isActive: true,
+        },
       },
       select: {
         account: {
@@ -89,6 +92,9 @@ export class SellerRepository {
     return await this.prisma.seller.findFirst({
       where: {
         accountId: params.id,
+        account: {
+          isActive: true,
+        },
       },
     });
   }
@@ -131,6 +137,9 @@ export class SellerRepository {
     return await this.prisma.seller.findFirst({
       where: {
         accountId: params.id,
+        account: {
+          isActive: true,
+        },
       },
       select: {
         accountId: true,

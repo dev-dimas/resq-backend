@@ -26,7 +26,7 @@ export class CustomerRepository {
     }>
   > {
     return await this.prisma.customer.findFirst({
-      where: { accountId: params.id },
+      where: { accountId: params.id, account: { isActive: true } },
       select: {
         account: {
           select: {
@@ -47,7 +47,7 @@ export class CustomerRepository {
 
   async getCustomer(params: { id: string }): Promise<Customer> {
     return await this.prisma.customer.findFirst({
-      where: { accountId: params.id },
+      where: { accountId: params.id, account: { isActive: true } },
     });
   }
 
@@ -75,6 +75,9 @@ export class CustomerRepository {
   > {
     const subscriptionList = await this.prisma.seller.findMany({
       where: {
+        account: {
+          isActive: true,
+        },
         subscriber: {
           some: {
             customerId: params.id,
@@ -162,16 +165,32 @@ export class CustomerRepository {
         favorite: {
           select: {
             product: {
+              where: {
+                seller: {
+                  account: {
+                    isActive: true;
+                  };
+                };
+              };
               select: {
                 id: true;
                 name: true;
                 price: true;
                 images: true;
                 imageBlurHash: true;
+                startTime: true;
+                endTime: true;
+                isDaily: true;
+                isActive: true;
                 seller: {
                   select: {
                     latitude: true;
                     longitude: true;
+                    account: {
+                      select: {
+                        isActive: true;
+                      };
+                    };
                   };
                 };
               };
@@ -181,7 +200,7 @@ export class CustomerRepository {
       };
     }>
   > {
-    const favoriteList = await this.prisma.customer.findFirst({
+    let favoriteList = await this.prisma.customer.findFirst({
       where: {
         accountId: params.id,
       },
@@ -189,16 +208,32 @@ export class CustomerRepository {
         favorite: {
           select: {
             product: {
+              where: {
+                seller: {
+                  account: {
+                    isActive: true,
+                  },
+                },
+              },
               select: {
                 id: true,
                 name: true,
                 price: true,
                 images: true,
                 imageBlurHash: true,
+                startTime: true,
+                endTime: true,
+                isDaily: true,
+                isActive: true,
                 seller: {
                   select: {
                     latitude: true,
                     longitude: true,
+                    account: {
+                      select: {
+                        isActive: true,
+                      },
+                    },
                   },
                 },
               },
@@ -207,6 +242,7 @@ export class CustomerRepository {
         },
       },
     });
+
     if (!favoriteList) return { favorite: { product: [] } };
 
     return favoriteList;

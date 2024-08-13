@@ -72,10 +72,12 @@ export class CustomerService {
 
         let startTimeSell = dayjs(now)
           .hour(startDate.hour())
-          .minute(startDate.minute());
+          .minute(startDate.minute())
+          .millisecond(0);
         let endTimeSell = dayjs(now)
           .hour(endDate.hour())
-          .minute(endDate.minute());
+          .minute(endDate.minute())
+          .millisecond(0);
 
         if (startTimeSell.isAfter(endTimeSell) && now.isBefore(endTimeSell)) {
           startTimeSell = startTimeSell.subtract(1, 'day');
@@ -87,8 +89,12 @@ export class CustomerService {
           endTimeSell = endTimeSell.add(1, 'day');
         }
 
-        if (now.isAfter(startTimeSell) && now.isBefore(endTimeSell))
+        if (
+          (now.isAfter(startTimeSell) && now.isBefore(endTimeSell)) ||
+          startTimeSell.isSame(endTimeSell)
+        )
           isAvailable = true;
+
         // console.log('Now', now.format());
         // console.log('Start Date', startDate.format());
         // console.log('End Date', endDate.format());
@@ -182,6 +188,12 @@ export class CustomerService {
     const unsubscribedRequest: UnsubscribeRequest =
       this.validationService.validate(CustomerValidation.UNSUBSCRIBE, request);
 
+    const seller = await this.sellerRepository.getById({
+      id: unsubscribedRequest.from,
+    });
+
+    if (!seller) throw new NotFoundException('Seller not found!');
+
     const subscriptionList =
       await this.customerRepository.getCustomerWithSubcription({
         id: account.id,
@@ -195,12 +207,6 @@ export class CustomerService {
     ) {
       throw new ConflictException("You're not subscribing this seller!");
     }
-
-    const seller = await this.sellerRepository.getById({
-      id: unsubscribedRequest.from,
-    });
-
-    if (!seller) throw new NotFoundException('Seller not found!');
 
     await this.customerRepository.removeSubscription({
       id: account.id,

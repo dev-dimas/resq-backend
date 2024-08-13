@@ -81,15 +81,20 @@ export class ProductService {
             product.isDaily ? undefined : product.startTime,
           )
             .hour(startDate.hour())
-            .minute(startDate.minute());
+            .minute(startDate.minute())
+            .millisecond(0);
           const endTimeSell = dayjs(
             product.isDaily ? undefined : product.startTime,
           )
             .hour(endDate.hour())
-            .minute(endDate.minute());
+            .minute(endDate.minute())
+            .millisecond(0);
           const now = dayjs();
 
-          if (now.isAfter(startTimeSell) && now.isBefore(endTimeSell))
+          if (
+            (now.isAfter(startTimeSell) && now.isBefore(endTimeSell)) ||
+            startTimeSell.isSame(endTimeSell)
+          )
             isAvailable = true;
 
           return product.distance <= 1.1 && isAvailable;

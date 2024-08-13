@@ -33,6 +33,11 @@ export class ProductRepository {
     return await this.prisma.product.findMany({
       where: {
         isActive: true,
+        seller: {
+          account: {
+            isActive: true,
+          },
+        },
       },
       include: {
         seller: true,
@@ -64,6 +69,8 @@ export class ProductRepository {
       "Product" p
     JOIN
       "Seller" s ON p."seller_id" = s."account_id"
+    JOIN
+      "Account" a ON s."account_id" = a."id"
     WHERE
       6371 * acos(
         cos(radians(${latitude})) * cos(radians(CAST(s."latitude" AS float))) *
@@ -71,6 +78,7 @@ export class ProductRepository {
         sin(radians(${latitude})) * sin(radians(CAST(s."latitude" AS float)))
       ) <= ${radius}
       AND p."is_active" = true
+      AND a."is_active" = true
   `;
 
     return products as (Product & { latitude: string; longitude: string })[];
@@ -113,6 +121,11 @@ export class ProductRepository {
     return await this.prisma.product.findFirst({
       where: {
         id: params.id,
+        seller: {
+          account: {
+            isActive: true,
+          },
+        },
       },
       include: {
         seller: {

@@ -71,10 +71,12 @@ export class SellerService {
           } else {
             let startTimeSell = dayjs(now)
               .hour(startDate.hour())
-              .minute(startDate.minute());
+              .minute(startDate.minute())
+              .millisecond(0);
             let endTimeSell = dayjs(now)
               .hour(endDate.hour())
-              .minute(endDate.minute());
+              .minute(endDate.minute())
+              .millisecond(0);
 
             if (
               startTimeSell.isAfter(endTimeSell) &&
@@ -89,7 +91,10 @@ export class SellerService {
               endTimeSell = endTimeSell.add(1, 'day');
             }
 
-            if (now.isAfter(startTimeSell) && now.isBefore(endTimeSell)) {
+            if (
+              (now.isAfter(startTimeSell) && now.isBefore(endTimeSell)) ||
+              startTimeSell.isSame(endTimeSell)
+            ) {
               isOnSale = true;
             }
           }
