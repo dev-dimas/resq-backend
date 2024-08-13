@@ -25,6 +25,7 @@ export class AdminRepository {
             select: {
               account: {
                 select: {
+                  id: true;
                   name: true;
                   email: true;
                   avatar: true;
@@ -38,6 +39,7 @@ export class AdminRepository {
             select: {
               account: {
                 select: {
+                  id: true;
                   name: true;
                   email: true;
                   avatar: true;
@@ -73,6 +75,7 @@ export class AdminRepository {
           select: {
             account: {
               select: {
+                id: true,
                 name: true,
                 email: true,
                 avatar: true,
@@ -86,6 +89,7 @@ export class AdminRepository {
           select: {
             account: {
               select: {
+                id: true,
                 name: true,
                 email: true,
                 avatar: true,
