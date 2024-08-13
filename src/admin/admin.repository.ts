@@ -29,6 +29,7 @@ export class AdminRepository {
                   email: true;
                   avatar: true;
                   avatarBlurHash: true;
+                  isActive: true;
                 };
               };
             };
@@ -41,6 +42,7 @@ export class AdminRepository {
                   email: true;
                   avatar: true;
                   avatarBlurHash: true;
+                  isActive: true;
                 };
               };
             };
@@ -75,6 +77,7 @@ export class AdminRepository {
                 email: true,
                 avatar: true,
                 avatarBlurHash: true,
+                isActive: true,
               },
             },
           },
@@ -87,10 +90,14 @@ export class AdminRepository {
                 email: true,
                 avatar: true,
                 avatarBlurHash: true,
+                isActive: true,
               },
             },
           },
         },
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
     return {
@@ -130,6 +137,38 @@ export class AdminRepository {
       },
       data: {
         isActive: true,
+      },
+    });
+  }
+
+  async solveComplaint(complaintId: string): Promise<void> {
+    await this.prisma.complaints.update({
+      where: {
+        id: complaintId,
+      },
+      data: {
+        status: 'SOLVED',
+      },
+    });
+  }
+
+  async solveSameComplaint(sellerId: string): Promise<void> {
+    await this.prisma.complaints.updateMany({
+      where: {
+        sellerId: sellerId,
+        status: 'PENDING',
+      },
+      data: {
+        status: 'SOLVED',
+      },
+    });
+  }
+
+  async getAccountByEmail(params: { email: string }): Promise<Account> {
+    return await this.prisma.account.findFirst({
+      where: {
+        email: params.email,
+        isAdmin: false,
       },
     });
   }

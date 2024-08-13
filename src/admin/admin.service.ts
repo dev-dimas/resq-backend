@@ -35,7 +35,7 @@ export class AdminService {
       id: banAccountRequest.accountId,
     });
 
-    //! TODO: ADD LOGIC TO SET ALL RELATED COMPLAINTS STATUS TO BE RESOLVED
+    await this.adminRepository.solveSameComplaint(banAccountRequest.accountId);
   }
 
   async unbanAccount(request: UnbanAccountRequest) {
@@ -53,5 +53,13 @@ export class AdminService {
     await this.adminRepository.unbanAccount({
       id: unbanAccountRequest.accountId,
     });
+  }
+
+  async solveComplaint(complaintId: string): Promise<void> {
+    await this.adminRepository.solveComplaint(complaintId);
+  }
+
+  async getAccount(id: string): Promise<Account> {
+    return await this.adminRepository.getAccount({ id });
   }
 }

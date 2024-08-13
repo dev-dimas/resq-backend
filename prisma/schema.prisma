@@ -115,5 +115,5 @@ model Complaints {
 
 enum StatusComplaintsType {
   PENDING
-  RESOLVED
+  SOLVED
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
 import { WebResponse } from 'src/model/web.model';
@@ -34,5 +34,23 @@ export class AdminController {
     return {
       message: `Successfully unbanned the account with id ${request.accountId}.`,
     };
+  }
+
+  @Post('customer/complaint/:complaintId/solve')
+  @HttpCode(200)
+  async solveComplaint(
+    @AuthAdmin() _: Account,
+    @Param('complaintId') complaintId: string,
+  ): Promise<WebResponse> {
+    await this.adminService.solveComplaint(complaintId);
+    return {
+      message: `Successfully solved the complaint with id ${complaintId}.`,
+    };
+  }
+
+  @Get('account/:id')
+  async getAccount(@Param('id') id: string): Promise<WebResponse<Account>> {
+    const account = await this.adminService.getAccount(id);
+    return { message: 'Success!', data: account };
   }
 }

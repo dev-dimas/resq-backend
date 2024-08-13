@@ -5,6 +5,7 @@
 /uploads
 /prisma/migrations
 .env
+/src/metadata.ts
 
 # Logs
 logs
