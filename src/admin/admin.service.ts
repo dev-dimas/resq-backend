@@ -59,7 +59,7 @@ export class AdminService {
     await this.adminRepository.solveComplaint(complaintId);
   }
 
-  async getAccount(id: string): Promise<Account> {
-    return await this.adminRepository.getAccount({ id });
+  async getAccount(email: string): Promise<Account> {
+    return await this.adminRepository.getAccountByEmail({ email });
   }
 }

@@ -48,9 +48,11 @@ export class AdminController {
     };
   }
 
-  @Get('account/:id')
-  async getAccount(@Param('id') id: string): Promise<WebResponse<Account>> {
-    const account = await this.adminService.getAccount(id);
+  @Get('account/:email')
+  async getAccount(
+    @Param('email') email: string,
+  ): Promise<WebResponse<Account>> {
+    const account = await this.adminService.getAccount(email);
     return { message: 'Success!', data: account };
   }
 }
