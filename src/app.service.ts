@@ -9,6 +9,6 @@ export class AppService implements OnApplicationBootstrap {
     await this.seedService.cleanSeed();
     await this.seedService.seedAdmin();
     await this.seedService.seedCategory();
-    await this.seedService.seedSellerAndProdyct();
+    await this.seedService.seedSellerAndProduct();
   }
 }

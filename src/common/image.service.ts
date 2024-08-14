@@ -31,8 +31,8 @@ export class ImageService {
     return `/uploads/${dir}/${filename}`;
   }
 
-  async generateBlurhash(image: Express.Multer.File): Promise<string> {
-    const imageBuffer = await sharp(image.buffer)
+  async generateBlurhash(image: Buffer): Promise<string> {
+    const imageBuffer = await sharp(image)
       .raw()
       .ensureAlpha()
       .resize(32, 32, { fit: 'inside' })
@@ -49,6 +49,17 @@ export class ImageService {
     );
 
     return blurhash;
+  }
+
+  async generateBlurhashFromLocal(imagePath: string): Promise<string> {
+    try {
+      const imageBuffer = fs.readFileSync(imagePath);
+      const blurhash = await this.generateBlurhash(imageBuffer);
+      return blurhash;
+    } catch (error) {
+      console.error('Error generating blurhash from local image:', error);
+      throw error;
+    }
   }
 
   async removeFile(dir: string): Promise<void> {

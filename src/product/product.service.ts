@@ -112,7 +112,7 @@ export class ProductService {
 
     const product = await this.prismaService.$transaction(async (prisma) => {
       const filename = await this.imageService.saveTo('product', images);
-      const blurHash = await this.imageService.generateBlurhash(images);
+      const blurHash = await this.imageService.generateBlurhash(images.buffer);
 
       const now = dayjs();
       const startTimeRequest = dayjs(createProductRequest.startTime);
@@ -200,7 +200,7 @@ export class ProductService {
       if (images) {
         filename = await this.imageService.saveTo('product', images);
         await this.imageService.removeFile(existingProduct.images[0]);
-        blurHash = await this.imageService.generateBlurhash(images);
+        blurHash = await this.imageService.generateBlurhash(images.buffer);
       }
 
       const now = dayjs(

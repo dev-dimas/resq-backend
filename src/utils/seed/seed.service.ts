@@ -7,11 +7,14 @@ import { Logger } from 'winston';
 import { manualData } from './manualData';
 import { sellerInherited } from './sellerInherited';
 import bcrypt from 'bcrypt';
+import { ImageService } from 'src/common/image.service';
+import path from 'path';
 
 @Injectable()
 export class SeedService {
   constructor(
     private prismaService: PrismaService,
+    private imageService: ImageService,
     @Inject(WINSTON_MODULE_PROVIDER) private logger: Logger,
   ) {}
 
@@ -84,7 +87,7 @@ export class SeedService {
     });
   }
 
-  async seedSellerAndProdyct(): Promise<void> {
+  async seedSellerAndProduct(): Promise<void> {
     const accountDb = await this.prismaService.account.findMany();
     const sellerDb = await this.prismaService.seller.findMany();
     const productDb = await this.prismaService.product.findMany();
@@ -99,7 +102,6 @@ export class SeedService {
     }
 
     const password = await bcrypt.hash(process.env.SELLER_DUMMY_PASSWORD, 10);
-    const blurHash = 'L0NdO8?bfQ?b~qj[fQj[fQfQfQfQ';
 
     const accounts: Omit<Account, 'createdAt' | 'updatedAt'>[] = [];
     const sellers: Omit<Seller, 'createdAt' | 'updatedAt'>[] = [];
@@ -116,7 +118,12 @@ export class SeedService {
         id: `${index}`,
         name: manualData[index - 1].sellerName,
         avatar: `/assets/dummy/seller/seller-${index}.webp`,
-        avatarBlurHash: blurHash,
+        avatarBlurHash: await this.imageService.generateBlurhashFromLocal(
+          path.join(
+            __dirname,
+            `../../../assets/dummy/seller/seller-${index}.webp`,
+          ),
+        ),
         email: sellerInherited[index - 1].email,
         password: password,
         expoPushToken: null,
@@ -140,7 +147,12 @@ export class SeedService {
         categoryName: manualData[index - 1].categoryName,
         description: manualData[index - 1].productDescription,
         images: [`/assets/dummy/product/product-${index}.webp`],
-        imageBlurHash: blurHash,
+        imageBlurHash: await this.imageService.generateBlurhashFromLocal(
+          path.join(
+            __dirname,
+            `../../../assets/dummy/product/product-${index}.webp`,
+          ),
+        ),
         isDaily: true,
         isActive: true,
         price: `${manualData[index - 1].price}`,

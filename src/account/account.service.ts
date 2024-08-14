@@ -138,7 +138,7 @@ export class AccountService {
     await this.deleteAvatarFromStorage(account);
 
     const filename = await this.imageService.saveTo('avatar', avatar);
-    const blurHash = await this.imageService.generateBlurhash(avatar);
+    const blurHash = await this.imageService.generateBlurhash(avatar.buffer);
 
     await this.accountRepository.updateAccountAvatar({
       id: account.id,
