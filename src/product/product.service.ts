@@ -161,9 +161,8 @@ export class ProductService {
           body: `Produk baru!. Cobain ${product.name} yuk di toko kami 😍.`,
           url: '/product/' + product.id,
         });
-
-        return product;
       }
+      return product;
     });
 
     return { product };

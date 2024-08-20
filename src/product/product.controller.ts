@@ -10,7 +10,13 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Account } from '@prisma/client';
 import { AuthCustomer, AuthSeller } from 'src/common/auth.decorator';
 import { WebResponse } from 'src/model/web.model';
@@ -55,6 +61,10 @@ export class ProductController {
     }),
   )
   @ApiConsumes('multipart/form-data')
+  @ApiOperation({
+    summary:
+      'If you create product by hitting the endpoint manually, you need to substract 7 hour from current time.',
+  })
   @ApiBody({
     type: CreateProductRequest,
   })
