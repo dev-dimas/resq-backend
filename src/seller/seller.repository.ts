@@ -35,6 +35,7 @@ export class SellerRepository {
             categoryName: true;
             price: true;
             images: true;
+            imageBlurHash: true;
             startTime: true;
             endTime: true;
             isDaily: true;
@@ -78,6 +79,7 @@ export class SellerRepository {
             categoryName: true,
             price: true,
             images: true,
+            imageBlurHash: true,
             startTime: true,
             endTime: true,
             isDaily: true,

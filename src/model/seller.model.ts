@@ -17,6 +17,7 @@ export class SellerDashboardResponse {
       categoryName: true;
       price: true;
       images: true;
+      imageBlurHash: true;
       startTime: true;
       endTime: true;
       isDaily: true;

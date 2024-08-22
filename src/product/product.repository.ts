@@ -59,6 +59,7 @@ export class ProductRepository {
       p."description",
       p."price",
       p."images",
+      p."image_blur_hash" AS "imageBlurHash",
       s."latitude",
       s."longitude",
       p."start_time" AS "startTime",
