@@ -35,7 +35,7 @@ export class SeedService {
       },
     ];
 
-    for (let index = 1; index <= 15; index++) {
+    for (let index = 1; index <= 20; index++) {
       query.push({ id: { equals: `${index}` } });
     }
 
@@ -93,9 +93,9 @@ export class SeedService {
     const productDb = await this.prismaService.product.findMany();
 
     if (
-      accountDb.length >= 15 ||
-      sellerDb.length >= 15 ||
-      productDb.length >= 15
+      accountDb.length >= 20 ||
+      sellerDb.length >= 20 ||
+      productDb.length >= 20
     ) {
       this.logger.info('Seller and product already seeded');
       return;
