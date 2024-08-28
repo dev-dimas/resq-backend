@@ -113,7 +113,7 @@ export class SeedService {
       .millisecond(0)
       .toDate();
 
-    for (let index = 1; index <= 15; index++) {
+    for (let index = 1; index <= 20; index++) {
       accounts.push({
         id: `${index}`,
         name: manualData[index - 1].sellerName,
