@@ -1,4 +1,14 @@
-export const sellerInherited = [
+type SellerInherited = {
+  id: number;
+  email: string;
+  password: string;
+  address: string;
+  isSeller: boolean;
+  latitude: string;
+  longitude: string;
+};
+
+export const sellerInherited: SellerInherited[] = [
   {
     id: 1,
     email: 'jamubupuji@dummy.com',
@@ -141,5 +151,54 @@ export const sellerInherited = [
     isSeller: true,
     latitude: '-7.4640391',
     longitude: '112.7277195',
+  },
+  {
+    id: 16,
+    email: 'takoyakisushi@dummy.com',
+    password: 'sellerdummy',
+    address:
+      'Jl. Graha Permata Sidorejo Indah No.3000, Sidorame, Sidorejo, Krian, Sidoarjo, Jawa Timur, Indonesia',
+    isSeller: true,
+    latitude: '-7.3764752',
+    longitude: '112.6113167',
+  },
+  {
+    id: 17,
+    email: 'bakwanpaknur@email.com',
+    password: 'sellerdummy',
+    address:
+      'Jl. Trunojoyo No.37, DR. Soetomo, Tegalsari, Surabaya, Jawa Timur, Indonesia',
+    isSeller: true,
+    latitude: '-7.3764752',
+    longitude: '112.6113167',
+  },
+  {
+    id: 18,
+    email: 'onigirinusantara@email.com',
+    password: 'sellerdummy',
+    address:
+      'Jl. Ketintang Timur PTT 1 No.41, Ketintang, Gayungan, Surabaya, Jawa Timur, Indonesia',
+    isSeller: true,
+    latitude: '-7.3100379',
+    longitude: '112.7334294',
+  },
+  {
+    id: 19,
+    email: 'gorengantpi@email.com',
+    password: 'sellerdummy',
+    address:
+      'Gang Ruko, Taman Pd. Indah Jl. Wiyung Indah, Wiyung, Surabaya, Jawa Timur, Indonesia',
+    isSeller: true,
+    latitude: '-7.3140983',
+    longitude: '112.6986221',
+  },
+  {
+    id: 20,
+    email: 'lumpiabeefidaman@email.com',
+    password: 'sellerdummy',
+    address: 'Darmo, Wonokromo, Surabaya, East Java 60255',
+    isSeller: true,
+    latitude: '-7.2791217',
+    longitude: '112.727769',
   },
 ];
