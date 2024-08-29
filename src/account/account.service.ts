@@ -106,6 +106,15 @@ export class AccountService {
     const editProfileRequest: EditProfileRequest =
       this.validationService.validate(AccountValidation.EDIT_PROFILE, request);
 
+    if (account.email !== editProfileRequest.email) {
+      const isNewEmailExist = await this.accountRepository.isAccountExist({
+        email: editProfileRequest.email,
+      });
+
+      if (isNewEmailExist !== 0)
+        throw new ConflictException('Email already used!');
+    }
+
     const updatedProfile = await this.accountRepository.updateAccount({
       id: account.id,
       email: editProfileRequest.email,
